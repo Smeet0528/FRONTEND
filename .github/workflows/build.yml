@@ -26,9 +26,13 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
+      # corepack 활성화
+      - name: Enable corepack
+        run: corepack enable
+
       # pnpm 설치
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
           version: 10
 
