@@ -24,11 +24,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: 'pnpm'
 
       # pnpm 설치
       - name: Install pnpm
-        run: npm install -g pnpm
+        uses: pnpm/actions-setup@v4
+        with:
+          version: 10
 
       # 의존성 설치
       - name: Install dependencies
