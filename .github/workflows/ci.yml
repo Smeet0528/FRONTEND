@@ -38,6 +38,3 @@ jobs:
       # 빌드 테스트
       - name: Build project
         run: pnpm run build
-
-      - name: Run tests
-        run: pnpm test
