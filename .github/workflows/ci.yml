@@ -10,7 +10,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-	    # 저장소 checkout 
+      # 저장소 checkout
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -27,7 +27,7 @@ jobs:
           node-version: 20
           cache: pnpm
 
-			# 의존성 설치
+      # 의존성 설치
       - name: Install dependencies
         run: pnpm install
 
@@ -35,7 +35,7 @@ jobs:
       - name: Run ESLint
         run: pnpm eslint . --ext .ts,.tsx,.js,.jsx
 
-			# 빌드 테스트
+      # 빌드 테스트
       - name: Build project
         run: pnpm run build
 
