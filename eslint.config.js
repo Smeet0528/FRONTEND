@@ -15,11 +15,18 @@ export default tseslint.config([
         version: '19.0.0',
       },
     },
-    parserOptions: {
-      project: ['./tsconfig.app.json', './tsconfig.node.json'],
-      tsconfigRootDir: import.meta.dirname,
-      ecmaFeatures: { jsx: true },
+
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: { ...globals.browser, ...globals.node },
+      parser: tseslint.parser,
+      parserOptions: {
+        project: ['./tsconfig.app.json', './tsconfig.node.json'],
+        tsconfigRootDir: import.meta.dirname,
+        ecmaFeatures: { jsx: true },
+      },
     },
+
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
@@ -27,15 +34,11 @@ export default tseslint.config([
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
     ],
+
     plugins: {
       react,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
     },
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: { ...globals.browser, ...globals.node },
-    },
+
     rules: {
       ...react.configs.flat.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
