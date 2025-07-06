@@ -1,0 +1,15 @@
+import Navlink from './link';
+import Home from '/src/assets/home.svg?react';
+import Study from '/src/assets/study.svg?react';
+
+const Navbar = () => {
+  return (
+    <nav className="w-full flex justify-between p-2">
+      <Navlink to="/" Icon={Home} alt="홈" />
+      <div className="border border-[#c4c4c4]"></div>
+      <Navlink to="/study" Icon={Study} alt="스터디" />
+    </nav>
+  );
+};
+
+export default Navbar;
