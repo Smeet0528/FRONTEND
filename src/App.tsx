@@ -1,11 +1,41 @@
-import { BrowserRouter } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  type RouteObject,
+} from 'react-router-dom';
+import PublicLayout from './layouts/public-layout';
+import LoginPage from './pages/login-page';
+import ProtectedLayout from './layouts/protected-layout';
+import HomePage from './pages/home-page';
+
+const publicRoutes: RouteObject[] = [
+  {
+    path: '/',
+    element: <PublicLayout />,
+    children: [
+      {
+        path: 'login',
+        element: <LoginPage />,
+      },
+    ],
+  },
+];
+
+const protectedRoutes: RouteObject[] = [
+  {
+    path: '/',
+    element: <ProtectedLayout />,
+    children: [
+      {
+        index: true,
+        element: <HomePage />,
+      },
+    ],
+  },
+];
+
+const router = createBrowserRouter([...publicRoutes, ...protectedRoutes]);
 
 export default function App() {
-  return (
-    <BrowserRouter>
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="max-w-[480px] w-full space-y-8"></div>
-      </div>
-    </BrowserRouter>
-  );
+  return <RouterProvider router={router} />;
 }

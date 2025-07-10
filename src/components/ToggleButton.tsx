@@ -50,7 +50,7 @@ const ToggleButton = ({
       }
     >
       {icon && <img src={icon} className="w-5" />}
-      <span className="select-none">{text}</span>
+      <span className="select-none font-[pretendard] font-normal">{text}</span>
       {hasDelete && (
         <button type="button" className="cursor-pointer" onClick={handleClick}>
           <img src={X} alt="삭제" className="w-5" />
