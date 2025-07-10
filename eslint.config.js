@@ -21,7 +21,11 @@ export default tseslint.config([
       globals: { ...globals.browser, ...globals.node },
       parser: tseslint.parser,
       parserOptions: {
-        project: ['./tsconfig.app.json', './tsconfig.node.json'],
+        project: [
+          './tsconfig.app.json',
+          './tsconfig.node.json',
+          './tsconfig.tailwind.json',
+        ],
         tsconfigRootDir: import.meta.dirname,
         ecmaFeatures: { jsx: true },
       },
