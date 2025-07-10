@@ -1,0 +1,5 @@
+// tsconfig.tailwind.json
+{
+  "extends": "./tsconfig.app.json", // 또는 "./tsconfig.json"
+  "include": ["tailwind.config.ts"]
+}
