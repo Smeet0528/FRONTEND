@@ -4,7 +4,7 @@ import Study from '/src/assets/study.svg?react';
 
 const Navbar = () => {
   return (
-    <nav className="fixed bottom-0 w-full max-w-[480px] flex justify-between p-2 pb-8 bg-white">
+    <nav className="fixed bottom-0 w-full max-w-[480px] flex justify-between p-2 pb-8 bg-white z-50">
       <Navlink to="/" Icon={Home} alt="홈" />
       <div className="border border-[#c4c4c4]"></div>
       <Navlink to="/study" Icon={Study} alt="스터디" />
