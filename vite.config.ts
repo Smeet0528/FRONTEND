@@ -2,6 +2,12 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import svgr from 'vite-plugin-svgr';
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// CommonJS에서 자동 제공되던 __dirname을 ESM에서 수동으로 구성
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -12,4 +18,9 @@ export default defineConfig({
     tailwindcss(),
     svgr(),
   ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
 });
