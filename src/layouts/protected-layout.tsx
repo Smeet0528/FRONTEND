@@ -13,8 +13,8 @@ export default function ProtectedLayout() {
   const isHomePage = matchPath('/', location.pathname);
 
   return (
-    <div className="min-h-screen flex justify-center">
-      <div className="max-w-[480px] w-full">
+    <div className="flex items-center justify-center bg-gray-100">
+      <div className="max-w-[480px] w-full min-h-screen bg-white">
         {isHomePage && <HomeHeader />}
         <div className="pt-[4rem]">
           <Outlet />

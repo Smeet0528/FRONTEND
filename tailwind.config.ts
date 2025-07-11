@@ -5,7 +5,7 @@ const config: Config = {
   content: ['./index.html', './src/**/*.{ts,tsx,js,jsx}'],
   theme: {
     fontFamily: {
-      pretendard: ['Pretendard'],
+      pretendard: ['Pretendard', 'sans-serif'],
     },
     extend: {},
   },

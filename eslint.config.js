@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
 import js from '@eslint/js';
 import globals from 'globals';
 import react from 'eslint-plugin-react';
@@ -5,6 +7,8 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import { globalIgnores } from 'eslint/config';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default tseslint.config([
   globalIgnores(['dist']),
@@ -15,7 +19,6 @@ export default tseslint.config([
         version: '19.0.0',
       },
     },
-
     languageOptions: {
       ecmaVersion: 2020,
       globals: { ...globals.browser, ...globals.node },
@@ -26,11 +29,10 @@ export default tseslint.config([
           './tsconfig.node.json',
           './tsconfig.tailwind.json',
         ],
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: __dirname,
         ecmaFeatures: { jsx: true },
       },
     },
-
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
@@ -38,11 +40,9 @@ export default tseslint.config([
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
     ],
-
     plugins: {
       react,
     },
-
     rules: {
       ...react.configs.flat.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
@@ -53,6 +53,7 @@ export default tseslint.config([
       ],
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'error',
     },
   },
 ]);
