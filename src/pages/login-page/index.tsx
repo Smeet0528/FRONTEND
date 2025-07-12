@@ -37,7 +37,7 @@ export default function LoginPage() {
           {...getInputProps('email')}
         />
         {errors?.email && touched?.email && (
-          <div className="text-red-500 text-sm">{errors.email}</div>
+          <div className="text-[#FF2323] text-sm">{errors.email}</div>
         )}
 
         <label htmlFor="password" className="sr-only">
@@ -52,7 +52,7 @@ export default function LoginPage() {
           {...getInputProps('password')}
         />
         {errors?.password && touched?.password && (
-          <div className="text-red-500 text-sm">{errors.password}</div>
+          <div className="text-[#FF2323] text-sm">{errors.password}</div>
         )}
 
         <button
