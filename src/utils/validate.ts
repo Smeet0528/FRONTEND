@@ -3,6 +3,10 @@ export type UserSigninInfo = {
   password: string;
 };
 
+export type UserSignUpInfo = UserSigninInfo & {
+  nickname: string;
+};
+
 function validateUser(values: UserSigninInfo) {
   const errors = { email: '', password: '' };
 
@@ -22,4 +26,19 @@ function validateUser(values: UserSigninInfo) {
 
 export function validateSignIn(values: UserSigninInfo) {
   return validateUser(values);
+}
+
+export function validateSignUp(values: UserSignUpInfo) {
+  const { email, password, nickname } = values;
+
+  const errors = {
+    ...validateUser({ email, password }),
+    nickname: '',
+  };
+
+  if (!(nickname.length >= 2)) {
+    errors.nickname = '닉네임은 2자 이상 입력해주세요.';
+  }
+
+  return errors;
 }

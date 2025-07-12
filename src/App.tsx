@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 import PublicLayout from './layouts/public-layout';
 import LoginPage from './pages/login-page';
+import RegisterPage from './pages/register-page';
 import ProtectedLayout from './layouts/protected-layout';
 import HomePage from './pages/home-page';
 
@@ -16,6 +17,10 @@ const publicRoutes: RouteObject[] = [
       {
         path: 'login',
         element: <LoginPage />,
+      },
+      {
+        path: 'register',
+        element: <RegisterPage />,
       },
     ],
   },
