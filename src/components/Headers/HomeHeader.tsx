@@ -14,7 +14,7 @@ const HomeHeader = () => {
   };
 
   return (
-    <div className="fixed top-0 w-full max-w-[480px] flex justify-between p-3 px-5 bg-white z-50">
+    <div className="fixed top-0 w-full max-w-[480px] flex justify-between p-3 px-5 bg-[#F8F8F8] z-50">
       <h1 className="font-semibold">Smeet</h1>
       <div className="flex gap-2">
         <button type="button" onClick={handleClickWrite}>
