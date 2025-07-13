@@ -39,3 +39,12 @@
     url('/fonts/Pretendard-Bold.woff') format('woff');
   font-display: swap;
 }
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background: #dbdbdb;
+  border-radius: 6px;
+}
