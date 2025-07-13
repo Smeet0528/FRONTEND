@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import X from '/src/assets/x.svg';
+import X from '@/assets/X.svg';
 
 interface ToggleButtonProps {
   icon?: string; //필터 버튼으로 사용 시 텍스트 앞 아이콘 추가용
