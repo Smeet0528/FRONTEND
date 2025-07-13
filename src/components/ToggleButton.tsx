@@ -37,7 +37,7 @@ const ToggleButton = ({
 
   return (
     <div
-      className="w-fit border rounded-2xl px-2 py-1 flex items-center"
+      className="w-fit rounded-3xl px-2 flex items-center text-[13px]"
       style={toggleStyle}
       onClick={
         isToggle
