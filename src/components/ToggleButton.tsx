@@ -6,6 +6,7 @@ interface ToggleButtonProps {
   text?: string;
   hasDelete?: boolean; // x 버튼 추가 시 사용
   bgColor?: string;
+  borderColor?: string;
   textColor?: string;
   isToggle?: boolean; // 토글 버튼으로 사용 시 추가
   onClick?: () => void; // 토글 버튼 이외 용도로 사용 시 추가
@@ -17,6 +18,7 @@ const ToggleButton = ({
   hasDelete = false,
   bgColor = '#FFFFFF',
   textColor = '#2C2C2C',
+  borderColor,
   isToggle = false,
   onClick,
 }: ToggleButtonProps) => {
@@ -37,7 +39,7 @@ const ToggleButton = ({
 
   return (
     <div
-      className="w-fit rounded-3xl px-2 flex items-center text-[13px]"
+      className={`w-fit rounded-3xl px-2 flex gap-1 items-center text-[14px] ${borderColor && 'border border-[${borderColor}] px-3.5 py-2'}`}
       style={toggleStyle}
       onClick={
         isToggle
