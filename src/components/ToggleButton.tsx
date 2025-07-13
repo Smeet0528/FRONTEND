@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import X from '@/assets/X.svg';
 
 interface ToggleButtonProps {
@@ -9,6 +8,8 @@ interface ToggleButtonProps {
   borderColor?: string;
   textColor?: string;
   isToggle?: boolean; // 토글 버튼으로 사용 시 추가
+  toggled?: boolean;
+  onToggle?: (text: string) => void; // 선택된 토클 버튼 텍스트 전달
   onClick?: () => void; // 토글 버튼 이외 용도로 사용 시 추가
 }
 
@@ -20,12 +21,14 @@ const ToggleButton = ({
   textColor = '#2C2C2C',
   borderColor,
   isToggle = false,
+  toggled = false,
+  onToggle,
   onClick,
 }: ToggleButtonProps) => {
-  const [toggle, setToggle] = useState(false);
-
   const handleToggle = () => {
-    setToggle((prev) => !prev);
+    if (text) {
+      onToggle?.(text);
+    }
   };
 
   const handleClick = () => {
@@ -33,8 +36,8 @@ const ToggleButton = ({
   };
 
   const toggleStyle = {
-    backgroundColor: toggle ? '#FA7D71' : bgColor,
-    color: toggle ? '#FFFFFF' : textColor,
+    backgroundColor: toggled ? '#FA7D71' : bgColor,
+    color: toggled ? '#FFFFFF' : textColor,
   };
 
   return (

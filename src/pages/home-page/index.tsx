@@ -26,11 +26,11 @@ const mockData = [
 
 export default function HomePage() {
   return (
-    <div className="px-6">
-      <h2 className="font-[pretendard] font-medium text-[#1F1F1F] pb-3.5">
+    <div>
+      <h2 className="fixed top-12 w-full max-w-[480px] px-6 font-[pretendard] font-medium text-[#1F1F1F] bg-[#F8F8F8]">
         내 스터디
       </h2>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 min-h-screen pt-3.5 px-6">
         {mockData?.map((data) => (
           <StudyCard
             key={data.id}

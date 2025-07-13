@@ -8,6 +8,8 @@ import LoginPage from './pages/login-page';
 import RegisterPage from './pages/register-page';
 import ProtectedLayout from './layouts/protected-layout';
 import HomePage from './pages/home-page';
+import StudyListPage from './pages/study-list-page';
+import FilterPage from './pages/filter-page';
 
 const publicRoutes: RouteObject[] = [
   {
@@ -34,6 +36,14 @@ const protectedRoutes: RouteObject[] = [
       {
         index: true,
         element: <HomePage />,
+      },
+      {
+        path: 'study-list',
+        element: <StudyListPage />,
+      },
+      {
+        path: 'filter',
+        element: <FilterPage />,
       },
     ],
   },

@@ -44,6 +44,14 @@ export default function StudyListPage() {
   const navigate = useNavigate();
   const [selectedState, setSelectedState] = useState('서울/경기');
 
+  const localStorageKeywords = JSON.parse(
+    localStorage.getItem('selectedKeywords') ?? 'null'
+  ) as string[] | null;
+
+  const [selectedKeywords, setSelectedKeywords] = useState<string[] | null>(
+    localStorageKeywords
+  );
+
   const handleClick = () => {
     void navigate('/filter');
   };
@@ -56,16 +64,34 @@ export default function StudyListPage() {
     void navigate('/new-study');
   };
 
-  return (
-    <div className="px-6">
-      <ToggleButton
-        icon={Filter}
-        text="필터"
-        borderColor="#ABABAB"
-        onClick={handleClick}
-      />
+  const handleDelete = (keyword: string) => {
+    setSelectedKeywords((prev) =>
+      prev ? prev.filter((kw) => kw !== keyword) : null
+    );
+  };
 
-      <div className="flex gap-4 justify-between flex-nowrap mt-3.5 overflow-x-scroll">
+  return (
+    <div>
+      <div className="fixed top-12 w-full max-w-[480px] px-6 pb-2 bg-[#F8F8F8] flex gap-2">
+        <ToggleButton
+          icon={Filter}
+          text="필터"
+          borderColor="#ABABAB"
+          onClick={handleClick}
+        />
+        {selectedKeywords?.map((keyword) => (
+          <ToggleButton
+            key={keyword}
+            text={keyword}
+            bgColor="#FA7D71"
+            textColor="#FFFFFF"
+            hasDelete={true}
+            onClick={() => handleDelete(keyword)}
+          />
+        ))}
+      </div>
+
+      <div className="fixed top-24 w-full max-w-[480px] bg-[#F8F8F8] flex gap-4 justify-between flex-nowrap overflow-x-scroll px-6 pb-3">
         {StateList.map((state) => (
           <button
             type="button"
@@ -78,11 +104,11 @@ export default function StudyListPage() {
         ))}
       </div>
 
-      <h2 className="mt-4 font-[pretendard] font-medium text-[#1F1F1F]">
+      <h2 className="fixed top-33 w-full max-w-[480px] px-6 bg-[#F8F8F8] font-[pretendard] font-medium text-[#1F1F1F]">
         현재 모집 중인 스터디
       </h2>
 
-      <div className="mt-3.5 flex flex-col gap-3">
+      <div className="px-6 mt-25 flex flex-col gap-3 min-h-screen">
         {mockData?.map((data) => (
           <StudyCard
             key={data.id}
