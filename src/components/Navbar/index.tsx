@@ -1,4 +1,4 @@
-import Navlink from './Link';
+import Navlink from './link';
 import Home from '/src/assets/home.svg?react';
 import Study from '/src/assets/study.svg?react';
 
