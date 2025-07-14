@@ -68,6 +68,23 @@ export default function StudyListPage() {
     setSelectedKeywords((prev) =>
       prev ? prev.filter((kw) => kw !== keyword) : null
     );
+
+    if (localStorage.getItem('selectedKeywords')) {
+      try {
+        const parsedKeywords: string[] = JSON.parse(
+          localStorage.getItem('selectedKeywords') || ''
+        );
+
+        const filteredKeywords = parsedKeywords.filter((kw) => kw !== keyword);
+
+        localStorage.setItem(
+          'selectedKeywords',
+          JSON.stringify(filteredKeywords)
+        );
+      } catch (error) {
+        console.error('localStorage 파싱 에러:', error);
+      }
+    }
   };
 
   return (

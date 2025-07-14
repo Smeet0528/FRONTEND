@@ -14,17 +14,20 @@ export default function ProtectedLayout() {
   const isHomePage = matchPath('/', location.pathname);
   const isStudyListPage = matchPath('/study-list', location.pathname);
   const isFilterPage = matchPath('/filter', location.pathname);
+  const isAlarmPage = matchPath('/alarm', location.pathname);
 
   const showHomeHeader = isHomePage || isStudyListPage;
   const showBackHeader = isFilterPage;
-  const showNavbar = isHomePage || isStudyListPage;
+  const showBackHeaderWithTitle = isAlarmPage;
+  const showNavbar = isHomePage || isStudyListPage || isAlarmPage;
 
   return (
     <div className="flex items-center justify-center bg-[#D9D9D9]">
       <div className="max-w-[480px] w-full min-h-screen bg-[#F8F8F8]">
         {showHomeHeader && <HomeHeader />}
         {showBackHeader && <BackHeader />}
-        <div className="pt-[4rem]">
+        {showBackHeaderWithTitle && <BackHeader title="Smeet" />}
+        <div className="pt-[4rem] pb-[5rem]">
           <Outlet />
         </div>
         {showNavbar && <Navbar />}

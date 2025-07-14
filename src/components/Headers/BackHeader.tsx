@@ -13,7 +13,7 @@ const BackHeader = ({ title }: BackHeaderProps) => {
   };
 
   return (
-    <div className="fixed top-0 w-full max-w-[480px] flex justify-between p-3 px-5 bg-[#F8F8F8] z-50">
+    <div className="fixed top-0 w-full max-w-[480px] flex gap-4.5 p-3 px-5 bg-[#F8F8F8] z-50">
       <button type="button" className="left-10 cursor-pointer">
         <img src={Back} alt="뒤로가기" onClick={handleClickBack} />
       </button>
