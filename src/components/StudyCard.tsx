@@ -22,7 +22,7 @@ const StudyCard = ({ id, title, keywords, member, limit }: StudyCardProps) => {
       className="px-6 py-5 bg-white rounded-lg shadow-lg cursor-pointer"
       onClick={handleClick}
     >
-      <p className="pb-3 font-[pretendard] font-semibold text-[#1F1F1F] text-[18px]">
+      <p className="pb-3 font-[pretendard] font-semibold text-[#1F1F1F]">
         {title}
       </p>
       <div className="flex justify-between">
