@@ -8,7 +8,17 @@ const StudyDetailPage = () => {
       <BackHeader title="Smeet" />
 
       <div className="mt-12">
-        <StudyTitleBlock />
+        {/* props 전달: nickname, title, tags */}
+        <StudyTitleBlock
+          nickname="김즈에"
+          title="코딩 스터디 하실 분 구해요~!"
+          tags={[
+            { text: '서울/경기', type: 'region' },
+            { text: '코딩' },
+            { text: '코딩테스트' },
+            { text: '모각코' },
+          ]}
+        />
 
         <div className="mt-3">
           <StudyMetaInfo
