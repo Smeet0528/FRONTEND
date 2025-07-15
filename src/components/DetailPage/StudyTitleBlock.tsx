@@ -2,21 +2,12 @@ import ProfileIcon from '@/assets/profile.svg?react';
 import Tag from '@/components/Tag';
 
 type StudyTitleBlockProps = {
-  nickname?: string;
-  title?: string;
-  tags?: { text: string; type?: 'region' | 'default' }[];
+  nickname: string;
+  title: string;
+  tags: { text: string; type?: 'region' | 'default' }[];
 };
 
-const StudyTitleBlock = ({
-  nickname = '김즈에', // 기본값
-  title = '코딩 스터디 하실 분 구해요~!', // 기본값
-  tags = [
-    { text: '서울/경기', type: 'region' },
-    { text: '코딩' },
-    { text: '코딩테스트' },
-    { text: '모각코' },
-  ], // 기본값
-}: StudyTitleBlockProps) => {
+const StudyTitleBlock = ({ nickname, title, tags }: StudyTitleBlockProps) => {
   return (
     <div className="flex flex-col gap-3">
       {/* 작성자 정보 */}

@@ -8,7 +8,6 @@ const StudyDetailPage = () => {
       <BackHeader title="Smeet" />
 
       <div className="mt-12">
-        {/* props 전달: nickname, title, tags */}
         <StudyTitleBlock
           nickname="김즈에"
           title="코딩 스터디 하실 분 구해요~!"
