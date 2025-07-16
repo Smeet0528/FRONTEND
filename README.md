@@ -4,7 +4,6 @@
 - **언어** : React + TypeScript
 - **빌드 툴** : Vite
 - **스타일링** : TailwindCSS
-- **개발서버** : Vite
 - **라우팅** :  React Router
 - **상태관리** : Zustand
 - **데이터 캐싱** : Tanstack Query
