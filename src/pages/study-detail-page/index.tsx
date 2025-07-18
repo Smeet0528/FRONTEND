@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import JoinModal from '@/components/JoinModal';
+
 import StudyTitleBlock from '@/components/DetailPage/StudyTitleBlock';
 import StudyMetaInfo from '@/components/DetailPage/StudyMetaInfo';
 import DescriptionBlock from '@/components/DetailPage/DescriptionBlock';
@@ -18,6 +21,8 @@ interface Study {
 }
 
 const StudyDetailPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false); // 상태 추가 - 모달창
+
   const study: Study = {
     nickname: '김즈에',
     title: '코딩 스터디 하실 분 구해요~!',
@@ -69,11 +74,20 @@ const StudyDetailPage = () => {
         <div className="fixed max-w-[480px] bottom-0 w-full pb-8 px-6">
           <button
             type="button"
+            onClick={() => setIsModalOpen(true)} // ✅ 클릭 시 모달 열기
             className="w-full h-12 rounded-lg bg-[#FA7D71] hover:bg-[#e45b4f] text-white font-semibold text-lg shadow-md"
           >
             신청하기
           </button>
         </div>
+
+        {/* 모달창 */}
+        {isModalOpen && (
+          <JoinModal
+            onClose={() => setIsModalOpen(false)}
+            onSubmit={(text) => console.log('제출됨:', text)}
+          />
+        )}
       </div>
     </div>
   );
