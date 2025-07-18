@@ -1,5 +1,6 @@
 import StudyTitleBlock from '@/components/DetailPage/StudyTitleBlock';
 import StudyMetaInfo from '@/components/DetailPage/StudyMetaInfo';
+import DescriptionBlock from '@/components/DetailPage/DescriptionBlock';
 import BackHeader from '@/components/Headers/BackHeader';
 
 const StudyDetailPage = () => {
@@ -26,6 +27,16 @@ const StudyDetailPage = () => {
             startDate="25.06.26"
             endDate="25.07.26"
             days="화, 수, 목"
+          />
+        </div>
+
+        <div className="mt-4">
+          <DescriptionBlock
+            description={`모각코할 사람 구해요,,,
+아직 정확한 계획은 안세웠지만
+혼자 공부하려니까 안되네요ㅠㅠ
+꼭 같은 분야 아니어도 됩니다
+디코로 모각코해요`}
           />
         </div>
       </div>
