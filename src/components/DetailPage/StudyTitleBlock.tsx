@@ -1,4 +1,4 @@
-import ProfileIcon from '@/assets/profile.svg?react';
+import profileIcon from '@/assets/profile.svg';
 import Tag from '@/components/Tag';
 
 type StudyTitleBlockProps = {
@@ -12,7 +12,7 @@ const StudyTitleBlock = ({ nickname, title, tags }: StudyTitleBlockProps) => {
     <div className="flex flex-col gap-3">
       {/* 작성자 정보 */}
       <div className="flex items-center gap-2">
-        <ProfileIcon className="w-9 h-9" />
+        <img src={profileIcon} alt="작성자 아이콘" className="w-9 h-9" />
         <p className="text-sm font-medium text-[#1F1F1F]">{nickname}</p>
       </div>
 
