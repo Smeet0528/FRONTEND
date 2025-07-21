@@ -1,1 +1,50 @@
 @import 'tailwindcss';
+
+@font-face {
+  font-family: Pretendard;
+  font-weight: 400;
+  src:
+    local('Pretendard Regular'),
+    url('/fonts/Pretendard-Regular.woff2') format('woff2'),
+    url('/fonts/Pretendard-Regular.woff') format('woff');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Pretendard;
+  font-weight: 500;
+  src:
+    local('Pretendard Medium'),
+    url('/fonts/Pretendard-Medium.woff2') format('woff2'),
+    url('/fonts/Pretendard-Medium.woff') format('woff');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Pretendard;
+  font-weight: 600;
+  src:
+    local('Pretendard SemiBold'),
+    url('/fonts/Pretendard-SemiBold.woff2') format('woff2'),
+    url('/fonts/Pretendard-SemiBold.woff') format('woff');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Pretendard;
+  font-weight: 700;
+  src:
+    local('Pretendard Bold'),
+    url('/fonts/Pretendard-Bold.woff2') format('woff2'),
+    url('/fonts/Pretendard-Bold.woff') format('woff');
+  font-display: swap;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background: #dbdbdb;
+  border-radius: 6px;
+}
