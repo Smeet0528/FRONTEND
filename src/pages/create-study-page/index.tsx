@@ -1,8 +1,8 @@
-// src/pages/create-study-page/index.tsx
 import { useState } from 'react';
 import BackHeader from '@/components/Headers/BackHeader';
 import StudyTitleInput from '@/components/CreateStudyPage/StudyTitleInput';
 import StudyIntroTextarea from '@/components/CreateStudyPage/StudyIntroTextarea';
+import StudyCategorySection from '@/components/CreateStudyPage/StudyCategorySection';
 
 function CreateStudyPage() {
   const [form, setForm] = useState({
@@ -10,6 +10,7 @@ function CreateStudyPage() {
     intro: '',
   });
 
+  // 입력창 값 변경 핸들러
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -25,6 +26,7 @@ function CreateStudyPage() {
         <form className="px-6 pt-14 flex flex-col gap-6 pb-36">
           <StudyTitleInput value={form.title} onChange={handleChange} />
           <StudyIntroTextarea value={form.intro} onChange={handleChange} />
+          <StudyCategorySection />
         </form>
 
         <div className="fixed max-w-[480px] bottom-0 w-full pb-8 px-6">
