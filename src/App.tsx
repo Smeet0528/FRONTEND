@@ -12,6 +12,7 @@ import StudyListPage from './pages/study-list-page';
 import FilterPage from './pages/filter-page';
 import AlarmPage from './pages/alarm-page';
 import StudyDetailPage from './pages/study-detail-page';
+import CreateStudyPage from './pages/create-study-page';
 
 const publicRoutes: RouteObject[] = [
   {
@@ -25,10 +26,6 @@ const publicRoutes: RouteObject[] = [
       {
         path: 'register',
         element: <RegisterPage />,
-      },
-      {
-        path: 'study-detail',
-        element: <StudyDetailPage />,
       },
     ],
   },
@@ -54,6 +51,14 @@ const protectedRoutes: RouteObject[] = [
       {
         path: 'alarm',
         element: <AlarmPage />,
+      },
+      {
+        path: 'study-detail',
+        element: <StudyDetailPage />,
+      },
+      {
+        path: 'create-study-page',
+        element: <CreateStudyPage />,
       },
     ],
   },
