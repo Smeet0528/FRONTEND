@@ -13,6 +13,7 @@ function CreateStudyPage() {
 
   const [memberCount, setMemberCount] = useState('');
   const [region, setRegion] = useState('');
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
 
   // 입력창 값 변경 핸들러
   const handleChange = (
@@ -34,6 +35,40 @@ function CreateStudyPage() {
 
           {/* 스터디 소개 */}
           <StudyIntroTextarea value={form.intro} onChange={handleChange} />
+
+          {/* 스터디 요일 */}
+          <div className="flex flex-col justify-start items-start w-[244px] gap-2">
+            <p className="text-base font-semibold text-[#2C2C2C]">
+              스터디 요일
+            </p>
+            <div className="flex justify-start items-center gap-2">
+              {['월', '화', '수', '목', '금', '토', '일'].map((day) => {
+                const isSelected = selectedDays.includes(day);
+
+                return (
+                  <button
+                    key={day}
+                    type="button"
+                    onClick={() => {
+                      setSelectedDays(
+                        (prev) =>
+                          prev.includes(day)
+                            ? prev.filter((d) => d !== day) // 선택 해제
+                            : [...prev, day] // 선택 추가
+                      );
+                    }}
+                    className={`w-8 h-8 rounded-full flex justify-center items-center text-sm font-semibold ${
+                      isSelected
+                        ? 'bg-[#FA7D71] text-white'
+                        : 'bg-white text-[#ABABAB] border border-[#ABABAB]'
+                    }`}
+                  >
+                    {day}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           {/* 모집인원 선택 */}
           <OptionSelector
