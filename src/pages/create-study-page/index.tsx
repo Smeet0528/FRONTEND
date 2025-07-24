@@ -54,7 +54,7 @@ function CreateStudyPage() {
         </form>
 
         {/* 하단 고정 버튼 */}
-        <div className="fixed max-w-[480px] bottom-0 w-full pb-8 px-6">
+        <div className="fixed max-w-[480px] bottom-0 w-full pb-8 px-6 bg-[#F8F8F8]">
           <button
             type="submit"
             className="w-full h-12 rounded-lg bg-[#FA7D71] hover:bg-[#e45b4f] text-white font-semibold text-lg shadow-md"
