@@ -49,7 +49,7 @@ function OptionSelector({ type, selected, onChange }: OptionSelectorProps) {
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="flex justify-between items-center w-[130px] h-12 px-4 rounded-lg bg-white border border-[#ABABAB]"
+          className="flex justify-between items-center w-[130px] h-10 px-4 rounded-lg bg-white border border-[#ABABAB]"
         >
           <p
             className={`text-sm font-medium ${
