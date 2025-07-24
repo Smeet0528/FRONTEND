@@ -48,7 +48,7 @@ function CreateStudyPage() {
       <div className="w-full max-w-[480px] bg-[#F8F8F8]">
         <BackHeader title="Smeet" />
 
-        <form className="px-6 pt-14 flex flex-col gap-6 pb-36">
+        <form className="px-6 flex flex-col gap-6 pb-36">
           <StudyTitleInput value={form.title} onChange={handleChange} />
           <StudyIntroTextarea value={form.intro} onChange={handleChange} />
 
@@ -58,7 +58,6 @@ function CreateStudyPage() {
             </p>
 
             <div className="flex items-center gap-4">
-              {/* 시작일 + 부터 */}
               <div className="flex items-center gap-2">
                 <DatePicker
                   selected={startDate}
@@ -69,7 +68,6 @@ function CreateStudyPage() {
                 <span className="text-xs text-[#ABABAB]">부터</span>
               </div>
 
-              {/* 종료일 + 까지 */}
               <div className="flex items-center gap-2">
                 <DatePicker
                   selected={endDate}
