@@ -11,8 +11,13 @@ import ToggleButton from '@/components/ToggleButton';
 import CalendarIcon from '@/assets/calender.svg';
 import PlusIcon from '@/assets/plus.svg';
 
-const CustomDateInput = forwardRef(
-  ({ value, onClick }: any, ref: React.Ref<HTMLButtonElement>) => (
+type DateInputProps = {
+  value?: string;
+  onClick?: () => void;
+};
+
+const CustomDateInput = forwardRef<HTMLButtonElement, DateInputProps>(
+  ({ value, onClick }, ref) => (
     <button
       type="button"
       onClick={onClick}
@@ -24,6 +29,7 @@ const CustomDateInput = forwardRef(
     </button>
   )
 );
+CustomDateInput.displayName = 'CustomDateInput'; // ✅ display name 추가
 
 function CreateStudyPage() {
   const [form, setForm] = useState({
@@ -40,7 +46,6 @@ function CreateStudyPage() {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
-  //localStorage에서 키워드 불러오기
   useEffect(() => {
     const stored = localStorage.getItem('selectedKeywords');
     if (stored) {
@@ -73,7 +78,7 @@ function CreateStudyPage() {
               <div className="flex items-center gap-2">
                 <DatePicker
                   selected={startDate}
-                  onChange={(date) => setStartDate(date)}
+                  onChange={(date: Date | null) => setStartDate(date)} // ✅ 타입 지정
                   dateFormat="yyyy.MM.dd"
                   customInput={<CustomDateInput />}
                 />
@@ -83,7 +88,7 @@ function CreateStudyPage() {
               <div className="flex items-center gap-2">
                 <DatePicker
                   selected={endDate}
-                  onChange={(date) => setEndDate(date)}
+                  onChange={(date: Date | null) => setEndDate(date)} // ✅ 타입 지정
                   dateFormat="yyyy.MM.dd"
                   customInput={<CustomDateInput />}
                 />
@@ -163,7 +168,7 @@ function CreateStudyPage() {
               {selectedKeywords.length < 3 && (
                 <button
                   type="button"
-                  onClick={() => navigate('/filter')}
+                  onClick={() => void navigate('/filter')} // ✅ void 사용
                   className="flex justify-start items-center gap-1 px-5 py-[7px] rounded-[20px] border border-[#ABABAB] text-sm text-[#2C2C2C]"
                 >
                   <img
