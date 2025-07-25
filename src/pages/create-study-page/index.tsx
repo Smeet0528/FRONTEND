@@ -1,13 +1,15 @@
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { useState, forwardRef } from 'react';
+import { useState, useEffect, forwardRef } from 'react';
+import { useNavigate } from 'react-router';
 import BackHeader from '@/components/Headers/BackHeader';
 import StudyTitleInput from '@/components/CreateStudyPage/StudyTitleInput';
 import StudyIntroTextarea from '@/components/CreateStudyPage/StudyIntroTextarea';
-import StudyCategorySection from '@/components/CreateStudyPage/StudyCategorySection';
 import OptionSelector from '@/components/CreateStudyPage/OptionSelector';
+import ToggleButton from '@/components/ToggleButton';
 import CalendarIcon from '@/assets/calender.svg';
+import PlusIcon from '@/assets/plus.svg';
 
 const CustomDateInput = forwardRef(
   ({ value, onClick }: any, ref: React.Ref<HTMLButtonElement>) => (
@@ -32,9 +34,19 @@ function CreateStudyPage() {
   const [memberCount, setMemberCount] = useState('');
   const [region, setRegion] = useState('');
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+
+  //localStorage에서 키워드 불러오기
+  useEffect(() => {
+    const stored = localStorage.getItem('selectedKeywords');
+    if (stored) {
+      setSelectedKeywords(JSON.parse(stored));
+    }
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -52,11 +64,11 @@ function CreateStudyPage() {
           <StudyTitleInput value={form.title} onChange={handleChange} />
           <StudyIntroTextarea value={form.intro} onChange={handleChange} />
 
+          {/* 스터디 기간 */}
           <div className="flex flex-col justify-start items-start w-[370px] gap-2">
             <p className="text-base font-semibold text-[#2C2C2C]">
               스터디 기간
             </p>
-
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <DatePicker
@@ -122,7 +134,47 @@ function CreateStudyPage() {
             selected={region}
             onChange={setRegion}
           />
-          <StudyCategorySection />
+
+          {/* 스터디 카테고리 */}
+          <div className="flex flex-col justify-start items-start gap-2">
+            <p className="text-base font-semibold text-[#2C2C2C]">
+              카테고리 선택 (3개)
+            </p>
+
+            <div className="flex gap-2 flex-wrap">
+              {selectedKeywords.map((keyword) => (
+                <ToggleButton
+                  key={keyword}
+                  text={keyword}
+                  isToggle={false}
+                  hasDelete={true}
+                  bgColor="#FA7D71"
+                  textColor="#FFFFFF"
+                  borderColor="#FA7D71"
+                  onClick={() =>
+                    setSelectedKeywords((prev) =>
+                      prev.filter((kw) => kw !== keyword)
+                    )
+                  }
+                />
+              ))}
+
+              {/* + 버튼 */}
+              {selectedKeywords.length < 3 && (
+                <button
+                  type="button"
+                  onClick={() => navigate('/filter')}
+                  className="flex justify-start items-center gap-1 px-5 py-[7px] rounded-[20px] border border-[#ABABAB] text-sm text-[#2C2C2C]"
+                >
+                  <img
+                    src={PlusIcon}
+                    alt="추가"
+                    className="w-[16px] h-[16px]"
+                  />
+                </button>
+              )}
+            </div>
+          </div>
         </form>
 
         {/* 하단 버튼 */}
