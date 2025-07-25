@@ -29,7 +29,7 @@ const CustomDateInput = forwardRef<HTMLButtonElement, DateInputProps>(
     </button>
   )
 );
-CustomDateInput.displayName = 'CustomDateInput'; // ✅ display name 추가
+CustomDateInput.displayName = 'CustomDateInput';
 
 function CreateStudyPage() {
   const [form, setForm] = useState({
@@ -49,7 +49,7 @@ function CreateStudyPage() {
   useEffect(() => {
     const stored = localStorage.getItem('selectedKeywords');
     if (stored) {
-      setSelectedKeywords(JSON.parse(stored));
+      setSelectedKeywords(JSON.parse(stored) as string[]); // 💥 이거 하나로 끝!
     }
   }, []);
 
@@ -78,7 +78,7 @@ function CreateStudyPage() {
               <div className="flex items-center gap-2">
                 <DatePicker
                   selected={startDate}
-                  onChange={(date: Date | null) => setStartDate(date)} // ✅ 타입 지정
+                  onChange={(date: Date | null) => setStartDate(date)}
                   dateFormat="yyyy.MM.dd"
                   customInput={<CustomDateInput />}
                 />
@@ -88,7 +88,7 @@ function CreateStudyPage() {
               <div className="flex items-center gap-2">
                 <DatePicker
                   selected={endDate}
-                  onChange={(date: Date | null) => setEndDate(date)} // ✅ 타입 지정
+                  onChange={(date: Date | null) => setEndDate(date)}
                   dateFormat="yyyy.MM.dd"
                   customInput={<CustomDateInput />}
                 />
@@ -147,28 +147,30 @@ function CreateStudyPage() {
             </p>
 
             <div className="flex gap-2 flex-wrap">
-              {selectedKeywords.map((keyword) => (
-                <ToggleButton
-                  key={keyword}
-                  text={keyword}
-                  isToggle={false}
-                  hasDelete={true}
-                  bgColor="#FA7D71"
-                  textColor="#FFFFFF"
-                  borderColor="#FA7D71"
-                  onClick={() =>
-                    setSelectedKeywords((prev) =>
-                      prev.filter((kw) => kw !== keyword)
-                    )
-                  }
-                />
-              ))}
+              {selectedKeywords.map((keyword) => {
+                return (
+                  <ToggleButton
+                    key={keyword}
+                    text={keyword}
+                    isToggle={false}
+                    hasDelete={true}
+                    bgColor="#FA7D71"
+                    textColor="#FFFFFF"
+                    borderColor="#FA7D71"
+                    onClick={() =>
+                      setSelectedKeywords((prev: string[]) =>
+                        prev.filter((kw: string) => kw !== keyword)
+                      )
+                    }
+                  />
+                );
+              })}
 
               {/* + 버튼 */}
               {selectedKeywords.length < 3 && (
                 <button
                   type="button"
-                  onClick={() => void navigate('/filter')} // ✅ void 사용
+                  onClick={() => void navigate('/filter')}
                   className="flex justify-start items-center gap-1 px-5 py-[7px] rounded-[20px] border border-[#ABABAB] text-sm text-[#2C2C2C]"
                 >
                   <img
