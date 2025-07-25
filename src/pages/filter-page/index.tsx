@@ -47,7 +47,7 @@ export default function FilterPage() {
 
   const handleSelect = () => {
     localStorage.setItem('selectedKeywords', JSON.stringify(selectedKeywords));
-    void navigate('/study-list');
+    void navigate(-1);
   };
 
   return (
