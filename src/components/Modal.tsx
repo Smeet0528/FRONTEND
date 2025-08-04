@@ -1,17 +1,30 @@
 import { useNavigate } from 'react-router';
 
 interface ModalProps {
-  icon: string;
+  icon?: string;
   title: string;
   content: string;
-  navigateUrl: string;
+  navigateUrl?: string;
+  isError?: boolean;
+  onClick?: () => void;
 }
 
-const Modal = ({ icon, title, content, navigateUrl }: ModalProps) => {
+const Modal = ({
+  icon,
+  title,
+  content,
+  navigateUrl,
+  isError = false,
+  onClick,
+}: ModalProps) => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleNavigate = () => {
     void navigate(`/${navigateUrl}`);
+  };
+
+  const handleClick = () => {
+    onClick?.();
   };
 
   return (
@@ -27,7 +40,7 @@ const Modal = ({ icon, title, content, navigateUrl }: ModalProps) => {
         <button
           type="button"
           className="w-full max-w-[80%] h-12 font-[pretendard] font-semibold text-[18px] text-white bg-[#FA7D71] rounded-[8px]"
-          onClick={handleClick}
+          onClick={!isError ? handleNavigate : handleClick}
         >
           확인
         </button>
