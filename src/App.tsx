@@ -13,6 +13,7 @@ import FilterPage from './pages/filter-page';
 import AlarmPage from './pages/alarm-page';
 import StudyDetailPage from './pages/study-detail-page';
 import CreateStudyPage from './pages/create-study-page';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const publicRoutes: RouteObject[] = [
   {
@@ -64,8 +65,14 @@ const protectedRoutes: RouteObject[] = [
   },
 ];
 
+const queryClient = new QueryClient();
+
 const router = createBrowserRouter([...publicRoutes, ...protectedRoutes]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 }

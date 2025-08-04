@@ -1,5 +1,8 @@
+import Modal from '@/components/Modal';
 import UseForm from '@/hooks/useForm';
+import useSignInMutation from '@/hooks/useSignInMutation';
 import { validateSignIn } from '@/utils/validate';
+import { useState } from 'react';
 import { Link } from 'react-router';
 
 export default function LoginPage() {
@@ -15,9 +18,15 @@ export default function LoginPage() {
     Object.values(errors || {}).some((error) => error.length > 0) ||
     Object.values(values).some((value) => value === '');
 
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+
+  const mutation = useSignInMutation({
+    onErrorCallback: () => setIsErrorModalOpen(true),
+  });
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(values);
+    mutation.mutate(values);
   };
 
   return (
@@ -58,7 +67,7 @@ export default function LoginPage() {
         <button
           type="submit"
           className="w-full max-w-[480px] h-12 px-3 rounded-lg bg-[#FA7D71] shadow-lg font-[pretendard] font-semibold text-white text-lg disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
-          disabled={isDisabled}
+          disabled={isDisabled || mutation.isPending}
         >
           로그인
         </button>
@@ -73,6 +82,15 @@ export default function LoginPage() {
           회원가입 하기
         </Link>
       </div>
+
+      {isErrorModalOpen && (
+        <Modal
+          title="로그인을 실패했습니다"
+          content="로그인 정보를 확인해주세요"
+          isError={true}
+          onClick={() => setIsErrorModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
