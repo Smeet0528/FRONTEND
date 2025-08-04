@@ -6,7 +6,7 @@ const HomeHeader = () => {
   const navigate = useNavigate();
 
   const handleClickWrite = () => {
-    void navigate('/new-study');
+    void navigate('/create-study-page');
   };
 
   const handleClickAlarm = () => {

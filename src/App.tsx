@@ -54,7 +54,7 @@ const protectedRoutes: RouteObject[] = [
         element: <AlarmPage />,
       },
       {
-        path: 'study-detail',
+        path: 'study-detail/:id',
         element: <StudyDetailPage />,
       },
       {
