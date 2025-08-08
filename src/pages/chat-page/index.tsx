@@ -22,7 +22,7 @@ export default function ChatPage({ title }: ChatPageProps) {
       <div className="w-full max-w-[480px] h-screen flex flex-col relative bg-[#FFF1F1] ">
         {/* 고정 헤더 */}
         <div className="fixed top-0 inset-x-0 mx-auto w-full max-w-[480px] h-[64px] px-5 flex items-center justify-between z-10  bg-[#FFF1F1]">
-          <button onClick={() => navigate(-1)}>
+          <button onClick={() => void navigate(-1)}>
             <img src={BackIcon} alt="뒤로가기" className="w-5 h-5" />
           </button>
           <h1 className="text-[18px] font-semibold text-[#1F1F1F] text-center flex-1 ml-2">
