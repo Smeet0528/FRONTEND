@@ -5,7 +5,11 @@ import SendIcon from '@/assets/send.svg';
 import PeopleIcon from '@/assets/people-offblack2.svg';
 import BackIcon from '@/assets/back.svg';
 
-export default function ChatPage() {
+interface ChatPageProps {
+  title: string;
+}
+
+export default function ChatPage({ title }: ChatPageProps) {
   const [inputValue, setInputValue] = useState('');
   const navigate = useNavigate();
 
@@ -19,7 +23,7 @@ export default function ChatPage() {
             <img src={BackIcon} alt="뒤로가기" className="w-5 h-5" />
           </button>
           <h1 className="text-[18px] font-semibold text-[#1F1F1F] text-center flex-1 ml-2">
-            코딩 스터디 하실 분 구해요~!
+            {title}
           </h1>
           <img
             src={PeopleIcon}
