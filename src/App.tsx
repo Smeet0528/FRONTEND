@@ -62,8 +62,8 @@ const protectedRoutes: RouteObject[] = [
         element: <CreateStudyPage />,
       },
       {
-        path: 'chat', // ✅ 라우터 경로 추가
-        element: <ChatPage />,
+        path: 'chat',
+        element: <ChatPage title="코딩 스터디 하실 분 구해요~!" />,
       },
     ],
   },
