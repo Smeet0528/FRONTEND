@@ -14,22 +14,22 @@ export default function ChatPage() {
       {/* 💡 가운데 채팅 화면만 배경색 적용 */}
       <div className="w-full max-w-[480px] h-screen flex flex-col relative bg-[#FFF1F1]">
         {/* 고정 헤더 */}
-        <div className="fixed top-0 inset-x-0 mx-auto w-full max-w-[480px] px-5 py-3 flex items-center justify-between z-50 bg-[#FFF1F1]">
+        <div className="fixed top-0 inset-x-0 mx-auto w-full max-w-[480px] h-[64px] px-5 flex items-center justify-between z-50 bg-[#FFF1F1]">
           <button onClick={() => navigate(-1)}>
             <img src={BackIcon} alt="뒤로가기" className="w-5 h-5" />
           </button>
-          <h1 className="text-[16px] font-semibold text-[#1F1F1F] text-center flex-1 ml-2">
+          <h1 className="text-[18px] font-semibold text-[#1F1F1F] text-center flex-1 ml-2">
             코딩 스터디 하실 분 구해요~!
           </h1>
           <img
             src={PeopleIcon}
             alt="참여자 보기"
-            className="w-5 h-5 cursor-pointer"
+            className="w-6 h-6 cursor-pointer"
           />
         </div>
 
         {/* 채팅 메시지 영역 */}
-        <div className="flex-1 overflow-y-auto mt-[64px] mb-[88px] px-6 flex flex-col gap-3">
+        <div className="flex-1 overflow-y-auto mt-[18px] mb-[88px] px-6 flex flex-col gap-3">
           <p className="text-sm text-[#1F1F1F]">김즈에</p>
 
           <ChatMessage
@@ -53,7 +53,7 @@ export default function ChatPage() {
         </div>
 
         {/* 고정 입력창 */}
-        <div className="fixed bottom-0 inset-x-0 mx-auto w-full max-w-[480px] px-6 py-3 flex items-center gap-3 z-50 bg-[#FFF1F1]">
+        <div className="fixed bottom-0 inset-x-0 mx-auto w-full max-w-[480px] px-6 py-4 flex items-center gap-3 z-50 bg-[#FFF1F1]">
           <div className="flex-1 px-3 py-3 rounded-lg bg-white border border-[#D1D1D1]">
             <input
               type="text"
