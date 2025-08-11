@@ -4,14 +4,30 @@ interface ModalProps {
   icon: string;
   title: string;
   content: string;
-  navigateUrl: string;
+  navigateUrl?: string;
+  onConfirm?: () => void;
 }
 
-const Modal = ({ icon, title, content, navigateUrl }: ModalProps) => {
+const Modal = ({
+  icon,
+  title,
+  content,
+  navigateUrl,
+  onConfirm,
+}: ModalProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    void navigate(`/${navigateUrl}`);
+    //onConfirm이 있으면 우선 실행 (페이지 이동 없음)
+    if (onConfirm) {
+      onConfirm();
+      return;
+    }
+    //navigateUrl이 있으면 해당 경로로 이동
+    if (navigateUrl) {
+      void navigate(`/${navigateUrl}`);
+      return;
+    }
   };
 
   return (
