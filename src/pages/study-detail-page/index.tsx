@@ -1,4 +1,3 @@
-// src/pages/study-detail-page/index.tsx
 import { useState } from 'react';
 import JoinModal from '@/components/JoinModal';
 
@@ -12,14 +11,8 @@ import successIcon from '@/assets/3D-fire.svg';
 
 type TagType = 'region' | 'default';
 type UserRole = 'GUEST' | 'CREATOR' | 'MEMBER';
-type StudyStatus = '모집중' | '모집완료' | '종료';
+type StudyStatus = '모집 중' | '모집 완료' | '종료';
 type ApplicationStatus = 'NONE' | 'PENDING' | 'ACCEPTED' | 'REJECTED';
-
-interface GroupCategory {
-  id: number;
-  name: string; // 화면에선 name만 사용
-  type: string; // 명세상 존재하나 화면 표시는 안함
-}
 
 interface GroupDetailResponse {
   current_members: number;
@@ -28,14 +21,14 @@ interface GroupDetailResponse {
   start_date: string; // "YYYY-MM-DD"
   end_date: string; // "YYYY-MM-DD"
   max_members: number;
-  status: StudyStatus; // "모집중" | "모집완료" | "종료"
-  region: string; // "서울/경기" 문자열
+  status: StudyStatus; // "모집 중" | "모집 완료" | "종료"
+  region: string; // "서울"
   content: string;
   day_of_week: string; // "월, 화, 수"
-  categories: GroupCategory[];
+  categories: string[];
   nickname: string; // 작성자 닉네임
-  role_of_current_user: UserRole; // 현재 유저 역할
-  application_status: ApplicationStatus; // 현재 유저의 신청 상태
+  roleOfCurrentUser: UserRole;
+  applicationStatus: ApplicationStatus;
 }
 
 interface StudyUIModel {
@@ -100,47 +93,41 @@ function ActionButton(props: {
 }
 
 function StudyDetailPage() {
-  //실제 API 연동 전까지 사용할 응답
+  //api 예시
   const mockApi: GroupDetailResponse = {
     current_members: 1,
     id: 1,
     title: '코딩 스터디 하실 분 구해요~!',
-    start_date: '2025-07-20',
-    end_date: '2025-08-20',
-    max_members: 5,
-    status: '모집중',
+    start_date: '2025-08-01',
+    end_date: '2025-09-01',
+    max_members: 4,
+    status: '모집 중',
     region: '서울/경기',
     content: `모각코할 사람 구해요,,,
 아직 정확한 계획은 안세웠지만
 혼자 공부하려니까 안되네요ㅠㅠ
 꼭 같은 분야 아니어도 됩니다
 디코로 모각코해요`,
-    day_of_week: '화, 수, 목',
-    categories: [
-      { id: 1, name: '코딩', type: '개발' },
-      { id: 2, name: '코딩테스트', type: '개발' },
-      { id: 3, name: '모각코', type: '개발' },
-    ],
+    day_of_week: '월, 수, 금',
+    categories: ['데이터베이스', '백엔드'],
     nickname: '김즈에',
-    //상태 바꿔서 테스트
-    role_of_current_user: 'GUEST', // 'GUEST' | 'CREATOR' | 'MEMBER'
-    application_status: 'NONE', // 'NONE' | 'PENDING' | 'ACCEPTED' | 'REJECTED'
+    roleOfCurrentUser: 'GUEST',
+    applicationStatus: 'NONE',
   };
 
   // 서버 응답 화면 상태 셋업
   const [studyStatus, setStudyStatus] = useState<StudyStatus>(mockApi.status);
-  // const [role, setRole] = useState<UserRole>(mockApi.role_of_current_user);
-  const [role] = useState<UserRole>(mockApi.role_of_current_user);
+  const [role] = useState<UserRole>(mockApi.roleOfCurrentUser);
   const [appStatus, setAppStatus] = useState<ApplicationStatus>(
-    mockApi.application_status
+    mockApi.applicationStatus
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   // 화면 표시 모델
   const regionTag = { text: mockApi.region, type: 'region' as const };
-  const categoryTags = mockApi.categories.map((c) => ({
-    text: c.name,
+  const categoryTags = mockApi.categories.map((name) => ({
+    text: name,
     type: 'default' as const,
   }));
 
@@ -158,7 +145,7 @@ function StudyDetailPage() {
 
   // 상태
   const isStudyEnded = studyStatus === '종료';
-  const isRecruitClosed = studyStatus === '모집완료' || isStudyEnded;
+  const isRecruitClosed = studyStatus === '모집 완료' || isStudyEnded;
 
   function renderFooter() {
     if (role === 'CREATOR') {
