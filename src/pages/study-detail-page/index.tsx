@@ -1,3 +1,4 @@
+// src/pages/study-detail-page/index.tsx
 import { useState } from 'react';
 import JoinModal from '@/components/JoinModal';
 
@@ -5,6 +6,9 @@ import StudyTitleBlock from '@/components/DetailPage/StudyTitleBlock';
 import StudyMetaInfo from '@/components/DetailPage/StudyMetaInfo';
 import DescriptionBlock from '@/components/DetailPage/DescriptionBlock';
 import BackHeader from '@/components/Headers/BackHeader';
+
+import Modal from '@/components/Modal';
+import successIcon from '@/assets/3D-fire.svg';
 
 type TagType = 'region' | 'default';
 type UserRole = 'GUEST' | 'CREATOR' | 'MEMBER';
@@ -100,7 +104,7 @@ function StudyDetailPage() {
   const mockApi: GroupDetailResponse = {
     current_members: 1,
     id: 1,
-    title: '함께 공부할 사람을 모집합니다!',
+    title: '코딩 스터디 하실 분 구해요~!',
     start_date: '2025-07-20',
     end_date: '2025-08-20',
     max_members: 5,
@@ -119,7 +123,7 @@ function StudyDetailPage() {
     ],
     nickname: '김즈에',
     //상태 바꿔서 테스트
-    role_of_current_user: 'CREATOR', // 'GUEST' | 'CREATOR' | 'MEMBER'
+    role_of_current_user: 'GUEST', // 'GUEST' | 'CREATOR' | 'MEMBER'
     application_status: 'NONE', // 'NONE' | 'PENDING' | 'ACCEPTED' | 'REJECTED'
   };
 
@@ -131,6 +135,7 @@ function StudyDetailPage() {
     mockApi.application_status
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   // 화면 표시 모델
   const regionTag = { text: mockApi.region, type: 'region' as const };
@@ -151,12 +156,11 @@ function StudyDetailPage() {
     description: mockApi.content,
   };
 
-  // 상태 플래그
+  // 상태
   const isStudyEnded = studyStatus === '종료';
   const isRecruitClosed = studyStatus === '모집완료' || isStudyEnded;
 
   function renderFooter() {
-    // 스터디장
     if (role === 'CREATOR') {
       return (
         <div className="w-full flex items-center justify-between">
@@ -173,15 +177,12 @@ function StudyDetailPage() {
             label="채팅하기"
             kind="chat"
             disabled={isStudyEnded}
-            onClick={() => {
-              if (!isStudyEnded) alert('채팅으로 이동');
-            }}
+            onClick={() => alert('채팅으로 이동')}
           />
         </div>
       );
     }
 
-    //멤버
     if (role === 'MEMBER') {
       return (
         <div className="w-full flex items-center justify-end">
@@ -189,15 +190,12 @@ function StudyDetailPage() {
             label="채팅하기"
             kind="chat"
             disabled={isStudyEnded}
-            onClick={() => {
-              if (!isStudyEnded) alert('채팅으로 이동');
-            }}
+            onClick={() => alert('채팅으로 이동')}
           />
         </div>
       );
     }
 
-    //게스트
     if (role === 'GUEST') {
       //종료/모집완료는 신청 비활성
       if (isStudyEnded || isRecruitClosed) {
@@ -230,11 +228,12 @@ function StudyDetailPage() {
     return null;
   }
 
-  //일단 즉시 대기 변환
+  // JoinModal 제출 시
   function handleApplySubmit(message: string) {
     console.log('신청 사유:', message);
     setIsModalOpen(false);
-    setAppStatus('PENDING');
+    setAppStatus('PENDING'); //중복신청방지
+    setIsSuccessModalOpen(true);
   }
 
   return (
@@ -272,11 +271,21 @@ function StudyDetailPage() {
           {renderFooter()}
         </div>
 
-        {/* 신청 모달 */}
+        {/* 신청 모달 (자기소개 입력) */}
         {isModalOpen && (
           <JoinModal
             onClose={() => setIsModalOpen(false)}
             onSubmit={handleApplySubmit}
+          />
+        )}
+
+        {isSuccessModalOpen && (
+          <Modal
+            icon={successIcon}
+            //줄바꿈하려면 모달컴포넌트에 whitespace-pre-line 추가해야함
+            title={`'${study.title}'\n스터디 신청이 완료되었습니다`}
+            content="열정 가득한 배움, 시작해볼까요?"
+            onConfirm={() => setIsSuccessModalOpen(false)}
           />
         )}
       </div>
