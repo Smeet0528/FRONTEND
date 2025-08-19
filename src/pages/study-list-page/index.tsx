@@ -61,7 +61,7 @@ export default function StudyListPage() {
   };
 
   const handleMakeStudy = () => {
-    void navigate('/new-study');
+    void navigate('/create-study-page');
   };
 
   const handleDelete = (keyword: string) => {

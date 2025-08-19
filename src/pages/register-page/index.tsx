@@ -1,5 +1,9 @@
+import Modal from '@/components/Modal';
 import UseForm from '@/hooks/useForm';
+import useSignUpMutation from '@/hooks/useSignUpMutation';
 import { validateSignUp } from '@/utils/validate';
+import { useState } from 'react';
+import Rocket from '@/assets/rocket.svg';
 
 export default function RegisterPage() {
   const { values, errors, touched, getInputProps } = UseForm({
@@ -15,9 +19,43 @@ export default function RegisterPage() {
     Object.values(errors || {}).some((error) => error.length > 0) ||
     Object.values(values).some((value) => value === '');
 
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [errorModalType, setErrorModalType] = useState<React.ReactNode>(null);
+
+  const mutation = useSignUpMutation({
+    onSuccessCallback: () => setIsSuccessModalOpen(true),
+    onErrorCallback: (error) => {
+      setIsErrorModalOpen(true);
+
+      if (error?.status === 400) {
+        setErrorModalType(
+          <Modal
+            title="이미 가입된 정보입니다."
+            content="가입정보를 확인해주세요"
+            onConfirm={() => setIsErrorModalOpen(false)}
+          />
+        );
+      } else {
+        setErrorModalType(
+          <Modal
+            title="회원가입에 실패했습니다"
+            content="가입정보를 확인해주세요"
+            onConfirm={() => setIsErrorModalOpen(false)}
+          />
+        );
+      }
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    mutation.mutate(values);
+  };
+
   return (
     <div className="w-full max-w-[480px] flex flex-col items-center mt-20">
-      <form className="w-full max-w-[480px]">
+      <form className="w-full max-w-[480px]" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4 px-6">
           <label htmlFor="email" className="font-[pretendard] font-medium">
             이메일을 작성해주세요
@@ -81,12 +119,23 @@ export default function RegisterPage() {
           <button
             type="submit"
             className="w-full max-w-[480px] h-12 rounded-lg bg-[#FA7D71] shadow-lg font-[pretendard] font-semibold text-white text-lg disabled:bg-gray-300 disabled:cursor-not-allowed cursor-pointer"
-            disabled={isDisabled}
+            disabled={isDisabled || mutation.isPending}
           >
             완료
           </button>
         </div>
       </form>
+
+      {isSuccessModalOpen && (
+        <Modal
+          icon={Rocket}
+          title="회원가입이 완료되었습니다"
+          content="환영합니다! 함께 공부해요"
+          navigateUrl="login"
+        />
+      )}
+
+      {isErrorModalOpen && errorModalType}
     </div>
   );
 }
