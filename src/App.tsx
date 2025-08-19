@@ -13,6 +13,7 @@ import FilterPage from './pages/filter-page';
 import AlarmPage from './pages/alarm-page';
 import StudyDetailPage from './pages/study-detail-page';
 import CreateStudyPage from './pages/create-study-page';
+import ChatPage from './pages/chat-page';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const publicRoutes: RouteObject[] = [
@@ -60,6 +61,10 @@ const protectedRoutes: RouteObject[] = [
       {
         path: 'create-study-page',
         element: <CreateStudyPage />,
+      },
+      {
+        path: 'chat',
+        element: <ChatPage title="코딩 스터디 하실 분 구해요~!" />,
       },
     ],
   },

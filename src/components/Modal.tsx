@@ -5,6 +5,7 @@ interface ModalProps {
   title: string;
   content: string;
   navigateUrl?: string;
+  onConfirm?: () => void;
   isError?: boolean;
   onClick?: () => void;
 }
@@ -14,17 +15,21 @@ const Modal = ({
   title,
   content,
   navigateUrl,
-  isError = false,
-  onClick,
+  onConfirm,
 }: ModalProps) => {
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-    void navigate(`/${navigateUrl}`);
-  };
-
   const handleClick = () => {
-    onClick?.();
+    //onConfirm이 있으면 우선 실행 (페이지 이동 없음)
+    if (onConfirm) {
+      onConfirm();
+      return;
+    }
+    //navigateUrl이 있으면 해당 경로로 이동
+    if (navigateUrl) {
+      void navigate(`/${navigateUrl}`);
+      return;
+    }
   };
 
   return (
