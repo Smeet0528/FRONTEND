@@ -87,8 +87,7 @@ export default function LoginPage() {
         <Modal
           title="로그인을 실패했습니다"
           content="로그인 정보를 확인해주세요"
-          isError={true}
-          onClick={() => setIsErrorModalOpen(false)}
+          onConfirm={() => setIsErrorModalOpen(false)}
         />
       )}
     </div>

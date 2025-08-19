@@ -6,7 +6,6 @@ interface ModalProps {
   content: string;
   navigateUrl?: string;
   onConfirm?: () => void;
-  onClick?: () => void;
 }
 
 const Modal = ({
@@ -21,7 +20,7 @@ const Modal = ({
   const handleClick = () => {
     //onConfirm이 있으면 우선 실행 (페이지 이동 없음)
     if (onConfirm) {
-      onConfirm();
+      onConfirm?.();
       return;
     }
     //navigateUrl이 있으면 해당 경로로 이동
