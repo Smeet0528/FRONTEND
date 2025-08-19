@@ -33,7 +33,6 @@ export default function RegisterPage() {
           <Modal
             title="이미 가입된 정보입니다."
             content="가입정보를 확인해주세요"
-            isError={true}
             onClick={() => setIsErrorModalOpen(false)}
           />
         );
@@ -42,7 +41,6 @@ export default function RegisterPage() {
           <Modal
             title="회원가입에 실패했습니다"
             content="가입정보를 확인해주세요"
-            isError={true}
             onClick={() => setIsErrorModalOpen(false)}
           />
         );

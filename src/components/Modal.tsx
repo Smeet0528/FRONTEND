@@ -6,7 +6,6 @@ interface ModalProps {
   content: string;
   navigateUrl?: string;
   onConfirm?: () => void;
-  isError?: boolean;
   onClick?: () => void;
 }
 
@@ -47,7 +46,7 @@ const Modal = ({
         <button
           type="button"
           className="w-full max-w-[80%] h-12 font-[pretendard] font-semibold text-[18px] text-white bg-[#FA7D71] rounded-[8px]"
-          onClick={!isError ? handleNavigate : handleClick}
+          onClick={handleClick}
         >
           확인
         </button>
