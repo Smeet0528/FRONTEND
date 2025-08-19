@@ -21,10 +21,33 @@ export default function RegisterPage() {
 
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [errorModalType, setErrorModalType] = useState<React.ReactNode>(null);
 
   const mutation = useSignUpMutation({
     onSuccessCallback: () => setIsSuccessModalOpen(true),
-    onErrorCallback: () => setIsErrorModalOpen(true),
+    onErrorCallback: (error) => {
+      setIsErrorModalOpen(true);
+
+      if (error?.status === 400) {
+        setErrorModalType(
+          <Modal
+            title="이미 가입된 정보입니다."
+            content="가입정보를 확인해주세요"
+            isError={true}
+            onClick={() => setIsErrorModalOpen(false)}
+          />
+        );
+      } else {
+        setErrorModalType(
+          <Modal
+            title="회원가입에 실패했습니다"
+            content="가입정보를 확인해주세요"
+            isError={true}
+            onClick={() => setIsErrorModalOpen(false)}
+          />
+        );
+      }
+    },
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -114,14 +137,7 @@ export default function RegisterPage() {
         />
       )}
 
-      {isErrorModalOpen && (
-        <Modal
-          title="회원가입에 실패했습니다"
-          content="가입정보를 확인해주세요"
-          isError={true}
-          onClick={() => setIsErrorModalOpen(false)}
-        />
-      )}
+      {isErrorModalOpen && errorModalType}
     </div>
   );
 }

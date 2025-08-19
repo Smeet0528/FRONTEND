@@ -1,13 +1,14 @@
 import { signUp } from '@/api/user';
 import type { RequestSignUpDto } from '@/types/user';
 import { useMutation } from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
 
 export default function useSignUpMutation({
   onSuccessCallback,
   onErrorCallback,
 }: {
   onSuccessCallback: () => void;
-  onErrorCallback: () => void;
+  onErrorCallback: (error: AxiosError) => void;
 }) {
   return useMutation({
     mutationFn: (signupData: RequestSignUpDto) => signUp(signupData),
@@ -16,7 +17,7 @@ export default function useSignUpMutation({
     },
     onError: (error) => {
       console.error(error);
-      onErrorCallback?.();
+      onErrorCallback?.(error as AxiosError);
     },
   });
 }

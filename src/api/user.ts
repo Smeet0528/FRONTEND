@@ -19,7 +19,7 @@ export const signUp = async (
 export const signIn = async (
   body: RequestSignInDto
 ): Promise<ResponseSignInDto> => {
-  const { data } = await axiosInstance.post(`/signin`, body);
+  const { data } = await axiosInstance.post(`/login`, body);
 
   return data;
 };

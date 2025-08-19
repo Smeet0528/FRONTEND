@@ -28,11 +28,13 @@ const Modal = ({
   };
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-100">
-      <div className="w-full max-w-[90%] h-[268px] flex flex-col justify-center items-center bg-white rounded-2xl">
-        <img src={icon} alt="모달 아이콘" className="w-25 h-25" />
+    <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
+      <div className="w-full max-w-[400px] h-[268px] flex flex-col justify-center items-center bg-white rounded-2xl">
+        {icon && <img src={icon} alt="모달 아이콘" className="w-25 h-25" />}
         <div className="pt-2 pb-4.5">
-          <p className="font-[pretendard] font-medium text-center">{title}</p>
+          <p className="font-[pretendard] font-medium text-center whitespace-pre-line">
+            {title}
+          </p>
           <p className="font-[pretendard] font-normal text-[14px] text-[#ABABAB] text-center">
             {content}
           </p>
