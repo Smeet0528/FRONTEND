@@ -17,8 +17,8 @@ function validateUser(values: UserSigninInfo) {
     errors.email = '올바른 이메일 형식이 아닙니다.';
   }
 
-  if (!(values.password.length >= 4)) {
-    errors.password = '비밀번호는 4자 이상 입력해주세요.';
+  if (!(values.password.length >= 4 && values.password.length <= 10)) {
+    errors.password = '비밀번호는 4자 이상, 10자 이하로 입력해주세요.';
   }
 
   return errors;
