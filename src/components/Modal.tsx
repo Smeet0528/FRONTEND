@@ -32,7 +32,7 @@ const Modal = ({
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
-      <div className="w-full max-w-[400px] h-[268px] flex flex-col justify-center items-center bg-white rounded-2xl">
+      <div className="w-full max-w-[400px] py-5 flex flex-col justify-center items-center bg-white rounded-2xl">
         {icon && <img src={icon} alt="모달 아이콘" className="w-25 h-25" />}
         <div className="pt-2 pb-4.5">
           <p className="font-[pretendard] font-medium text-center whitespace-pre-line">
