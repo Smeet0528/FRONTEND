@@ -11,6 +11,8 @@ import ToggleButton from '@/components/ToggleButton';
 import CalendarIcon from '@/assets/calender.svg';
 import PlusIcon from '@/assets/plus.svg';
 import { createGroup } from '@/api/group';
+import Modal from '@/components/Modal';
+import BookIcon from '@/assets/3D-book.svg';
 
 type DateInputProps = {
   value?: string;
@@ -46,6 +48,9 @@ function CreateStudyPage() {
 
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [createdGroupId, setCreatedGroupId] = useState<number | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem('selectedKeywords');
@@ -103,9 +108,9 @@ function CreateStudyPage() {
       const response = await createGroup(payload);
 
       if (response.id) {
-        alert('성공적으로 모임이 생성되었습니다!');
+        setCreatedGroupId(response.id);
+        setIsModalOpen(true);
         localStorage.removeItem('selectedKeywords'); 
-        navigate(`/study-detail/${response.id}`); 
       }
     } catch (error: any) {
       console.error('모임 생성 에러:', error);
@@ -120,10 +125,7 @@ function CreateStudyPage() {
       <div className="w-full max-w-[480px] bg-[#F8F8F8]">
         <BackHeader title="Smeet" />
 
-        <form
-          className="px-6 flex flex-col gap-6 "
-          onSubmit={handleSubmit}
-        >
+        <form className="px-6 flex flex-col gap-6 " onSubmit={handleSubmit}>
           <StudyTitleInput value={form.title} onChange={handleChange} />
           <StudyIntroTextarea value={form.intro} onChange={handleChange} />
 
@@ -250,6 +252,20 @@ function CreateStudyPage() {
             </button>
           </div>
         </form>
+
+        {isModalOpen && (
+          <Modal
+            icon={BookIcon}
+            title={`'${form.title}'\n스터디 생성이 완료되었습니다`}
+            content="열정 가득한 배움, 시작해볼까요?"
+            onConfirm={() => {
+              // 확인 버튼 클릭 시 상세 페이지로 이동
+              if (createdGroupId) {
+                navigate(`/study-detail/${createdGroupId}`);
+              }
+            }}
+          />
+        )}
       </div>
     </div>
   );
