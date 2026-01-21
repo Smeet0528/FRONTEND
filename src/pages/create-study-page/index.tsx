@@ -10,6 +10,7 @@ import OptionSelector from '@/components/CreateStudyPage/OptionSelector';
 import ToggleButton from '@/components/ToggleButton';
 import CalendarIcon from '@/assets/calender.svg';
 import PlusIcon from '@/assets/plus.svg';
+import { createGroup } from '@/api/group';
 
 type DateInputProps = {
   value?: string;
@@ -49,7 +50,7 @@ function CreateStudyPage() {
   useEffect(() => {
     const stored = localStorage.getItem('selectedKeywords');
     if (stored) {
-      setSelectedKeywords(JSON.parse(stored) as string[]); // 💥 이거 하나로 끝!
+      setSelectedKeywords(JSON.parse(stored) as string[]); 
     }
   }, []);
 
@@ -60,12 +61,69 @@ function CreateStudyPage() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  //date객체 YYYY-MM-DD문자열로 변환
+  const formatDate = (date: Date | null) => {
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  //제출
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    //유효성 검사
+    if (
+      !form.title ||
+      !form.intro ||
+      !startDate ||
+      !endDate ||
+      !memberCount ||
+      !region ||
+      selectedKeywords.length === 0
+    ) {
+      alert('모든 필수 항목(*)을 입력하고 카테고리를 선택해주세요.');
+      return;
+    }
+
+    try {
+      const payload = {
+        title: form.title,
+        content: form.intro,
+        start_date: formatDate(startDate),
+        end_date: formatDate(endDate),
+        max_members: parseInt(memberCount, 10), 
+        region: region,
+        day_of_week: selectedDays.join(', '), // ['월', '수'] -> "월, 수"
+        categoryNames: selectedKeywords,
+      };
+
+      const response = await createGroup(payload);
+
+      if (response.id) {
+        alert('성공적으로 모임이 생성되었습니다!');
+        localStorage.removeItem('selectedKeywords'); 
+        navigate(`/study-detail/${response.id}`); 
+      }
+    } catch (error: any) {
+      console.error('모임 생성 에러:', error);
+      alert(
+        error.response?.data?.message || '모임 생성 중 오류가 발생했습니다.'
+      );
+    }
+  };
+
   return (
     <div className="w-full flex justify-center bg-[#F8F8F8] min-h-screen">
       <div className="w-full max-w-[480px] bg-[#F8F8F8]">
         <BackHeader title="Smeet" />
 
-        <form className="px-6 flex flex-col gap-6 pb-36">
+        <form
+          className="px-6 flex flex-col gap-6 "
+          onSubmit={handleSubmit}
+        >
           <StudyTitleInput value={form.title} onChange={handleChange} />
           <StudyIntroTextarea value={form.intro} onChange={handleChange} />
 
@@ -182,17 +240,16 @@ function CreateStudyPage() {
               )}
             </div>
           </div>
+          {/* 하단 버튼 */}
+          <div className="w-full max-w-[480px] pt-3">
+            <button
+              type="submit"
+              className="w-full h-12 rounded-lg bg-[#FA7D71] hover:bg-[#e45b4f] text-white font-semibold text-lg shadow-md"
+            >
+              스밋하기
+            </button>
+          </div>
         </form>
-
-        {/* 하단 버튼 */}
-        <div className="fixed max-w-[480px] bottom-0 w-full pb-8 px-6 bg-[#F8F8F8]">
-          <button
-            type="submit"
-            className="w-full h-12 rounded-lg bg-[#FA7D71] hover:bg-[#e45b4f] text-white font-semibold text-lg shadow-md"
-          >
-            스밋하기
-          </button>
-        </div>
       </div>
     </div>
   );
