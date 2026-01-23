@@ -11,7 +11,10 @@ interface CreateStudyState {
   selectedKeywords: string[];
 
   //업데이트
-  setField: (field: string, value: any) => void;
+  setField: (
+    field: keyof Omit<CreateStudyState, 'setField' | 'reset'>,
+    value: string | string[] | Date | null
+  ) => void;
   reset: () => void;
 }
 
