@@ -25,3 +25,28 @@ export interface ResponseCreateGroupDto {
   applicationStatus: string;
   roleOfCurrentUser: string;
 }
+
+export type UserRole = 'GUEST' | 'CREATOR' | 'MEMBER';
+export type ApplicationStatus =
+  | 'NONE'
+  | 'PENDING'
+  | 'ACCEPTED'
+  | 'REJECTED'
+  | 'CREATOR';
+
+export interface GroupDetailResponse {
+  current_members: number;
+  id: number;
+  nickname: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+  day_of_week: string;
+  region: string;
+  max_members: number;
+  status: string;
+  content: string;
+  categories: string[]; 
+  applicationStatus: ApplicationStatus;
+  roleOfCurrentUser: UserRole;
+}
