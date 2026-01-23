@@ -106,7 +106,6 @@ function CreateStudyPage() {
       if (response.id) {
         setCreatedGroupId(response.id);
         setIsModalOpen(true);
-        reset();
       }
     } catch (error: any) {
       console.error('모임 생성 에러:', error);
@@ -241,6 +240,7 @@ return (
           content="열정 가득한 배움, 시작해볼까요?"
           onConfirm={() => {
             // 확인 버튼 클릭 시 상세 페이지로 이동
+            reset();
             if (createdGroupId) {
               navigate(`/study-detail/${createdGroupId}`);
             }
