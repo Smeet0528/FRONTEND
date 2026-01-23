@@ -1,62 +1,41 @@
-// src/pages/study-detail-page/index.tsx
-import { useState } from 'react';
-import JoinModal from '@/components/JoinModal';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router';
 
+import JoinModal from '@/components/JoinModal';
 import StudyTitleBlock from '@/components/DetailPage/StudyTitleBlock';
 import StudyMetaInfo from '@/components/DetailPage/StudyMetaInfo';
 import DescriptionBlock from '@/components/DetailPage/DescriptionBlock';
 import BackHeader from '@/components/Headers/BackHeader';
-
 import Modal from '@/components/Modal';
 import successIcon from '@/assets/3D-fire.svg';
 
+import { getGroupDetail } from '@/api/group';
+import type {
+  GroupDetailResponse,
+  UserRole,
+  ApplicationStatus,
+} from '@/types/group';
+
 type TagType = 'region' | 'default';
-type UserRole = 'GUEST' | 'CREATOR' | 'MEMBER';
-type StudyStatus = '모집중' | '모집완료' | '종료';
-type ApplicationStatus = 'NONE' | 'PENDING' | 'ACCEPTED' | 'REJECTED';
-
-interface GroupCategory {
-  id: number;
-  name: string; // 화면에선 name만 사용
-  type: string; // 명세상 존재하나 화면 표시는 안함
-}
-
-interface GroupDetailResponse {
-  current_members: number;
-  id: number;
-  title: string;
-  start_date: string; // "YYYY-MM-DD"
-  end_date: string; // "YYYY-MM-DD"
-  max_members: number;
-  status: StudyStatus; // "모집중" | "모집완료" | "종료"
-  region: string; // "서울/경기" 문자열
-  content: string;
-  day_of_week: string; // "월, 화, 수"
-  categories: GroupCategory[];
-  nickname: string; // 작성자 닉네임
-  role_of_current_user: UserRole; // 현재 유저 역할
-  application_status: ApplicationStatus; // 현재 유저의 신청 상태
-}
-
 interface StudyUIModel {
   nickname: string;
   title: string;
   tags: { text: string; type?: TagType }[];
   current: number;
   capacity: number;
-  startDate: string; // "YY.MM.DD"
-  endDate: string; // "YY.MM.DD"
-  days: string; // "월, 화, 수"
+  startDate: string;
+  endDate: string;
+  days: string;
   description: string;
 }
 
-//"YYYY-MM-DD" → "YY.MM.DD" 포맷 변환
+//YYYY-MM-DD → YY.MM.DD 
 function formatDate(yyyyMmDd: string) {
   if (!yyyyMmDd.includes('-')) return yyyyMmDd;
   const [y, m, d] = yyyyMmDd.split('-');
   return `${y.slice(2)}.${m}.${d}`;
 }
-
+                 
 function ActionButton(props: {
   label: string;
   disabled?: boolean;
@@ -77,7 +56,7 @@ function ActionButton(props: {
     chat: 'bg-[#fa7d71] text-white',
   };
 
-  // 비활성 스타일
+  //비활성
   const disabledStyle =
     'bg-[#D1D1D1] text-[#656565] border border-transparent cursor-not-allowed';
 
@@ -100,84 +79,82 @@ function ActionButton(props: {
 }
 
 function StudyDetailPage() {
-  //실제 API 연동 전까지 사용할 응답
-  const mockApi: GroupDetailResponse = {
-    current_members: 1,
-    id: 1,
-    title: '코딩 스터디 하실 분 구해요~!',
-    start_date: '2025-07-20',
-    end_date: '2025-08-20',
-    max_members: 5,
-    status: '모집중',
-    region: '서울/경기',
-    content: `모각코할 사람 구해요,,,
-아직 정확한 계획은 안세웠지만
-혼자 공부하려니까 안되네요ㅠㅠ
-꼭 같은 분야 아니어도 됩니다
-디코로 모각코해요`,
-    day_of_week: '화, 수, 목',
-    categories: [
-      { id: 1, name: '코딩', type: '개발' },
-      { id: 2, name: '코딩테스트', type: '개발' },
-      { id: 3, name: '모각코', type: '개발' },
-    ],
-    nickname: '김즈에',
-    //상태 바꿔서 테스트
-    role_of_current_user: 'GUEST', // 'GUEST' | 'CREATOR' | 'MEMBER'
-    application_status: 'NONE', // 'NONE' | 'PENDING' | 'ACCEPTED' | 'REJECTED'
-  };
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
-  // 서버 응답 화면 상태 셋업
-  const [studyStatus, setStudyStatus] = useState<StudyStatus>(mockApi.status);
-  // const [role, setRole] = useState<UserRole>(mockApi.role_of_current_user);
-  const [role] = useState<UserRole>(mockApi.role_of_current_user);
-  const [appStatus, setAppStatus] = useState<ApplicationStatus>(
-    mockApi.application_status
-  );
+  const [data, setData] = useState<GroupDetailResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
-  // 화면 표시 모델
-  const regionTag = { text: mockApi.region, type: 'region' as const };
-  const categoryTags = mockApi.categories.map((c) => ({
-    text: c.name,
-    type: 'default' as const,
-  }));
+  //API 호출
+  useEffect(() => {
+    const fetchDetail = async () => {
+      if (!id) return;
+      try {
+        const res = await getGroupDetail(id);
+        setData(res);
+      } catch (error) {
+        console.error('상세 정보 호출 실패:', error);
+        alert('데이터를 가져오지 못했습니다.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    void fetchDetail();
+  }, [id]);
+
+  if (isLoading || !data) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        로딩 중...
+      </div>
+    );
+  }
 
   const study: StudyUIModel = {
-    nickname: mockApi.nickname,
-    title: mockApi.title,
-    tags: [regionTag, ...categoryTags],
-    current: mockApi.current_members,
-    capacity: mockApi.max_members,
-    startDate: formatDate(mockApi.start_date),
-    endDate: formatDate(mockApi.end_date),
-    days: mockApi.day_of_week,
-    description: mockApi.content,
+    nickname: data.nickname,
+    title: data.title,
+    tags: [
+      { text: data.region, type: 'region' as const },
+      ...data.categories.map((name) => ({
+        text: name,
+        type: 'default' as const,
+      })),
+    ],
+    current: data.current_members,
+    capacity: data.max_members,
+    startDate: formatDate(data.start_date),
+    endDate: formatDate(data.end_date),
+    days: data.day_of_week,
+    description: data.content,
   };
 
-  // 상태
-  const isStudyEnded = studyStatus === '종료';
-  const isRecruitClosed = studyStatus === '모집완료' || isStudyEnded;
-
   function renderFooter() {
+    if (!data) return null;
+    const role: UserRole = data.roleOfCurrentUser;
+    const appStatus: ApplicationStatus = data.applicationStatus;
+    const status = data.status;
+
     if (role === 'CREATOR') {
       return (
-        <div className="w-full flex items-center justify-between">
+        <div className="w-full flex items-center justify-between gap-3">
           <ActionButton
             label="종료하기"
             kind="end"
-            disabled={isStudyEnded}
+            disabled={status === '종료'}
             onClick={() => {
-              // 종료 API 호출
-              setStudyStatus('종료');
+              if (confirm('모임을 종료하시겠습니까?')) {
+                //종료 API 연결 예정
+              }
             }}
           />
           <ActionButton
             label="채팅하기"
             kind="chat"
-            disabled={isStudyEnded}
-            onClick={() => alert('채팅으로 이동')}
+            onClick={() => {
+              void navigate(`/chat/${data.id}`);//수정예정
+            }}
           />
         </div>
       );
@@ -185,37 +162,29 @@ function StudyDetailPage() {
 
     if (role === 'MEMBER') {
       return (
-        <div className="w-full flex items-center justify-end">
+        <div className="w-full flex justify-end">
           <ActionButton
             label="채팅하기"
             kind="chat"
-            disabled={isStudyEnded}
-            onClick={() => alert('채팅으로 이동')}
+            onClick={() => {
+              void navigate(`/chat/${data.id}`); //수정예정
+            }}
           />
         </div>
       );
     }
 
     if (role === 'GUEST') {
-      //종료/모집완료는 신청 비활성
-      if (isStudyEnded || isRecruitClosed) {
-        return <ActionButton label="신청하기" kind="apply" disabled />;
-      }
-      //대기 -> 비활성 중복 신청 방지
       if (appStatus === 'PENDING') {
         return <ActionButton label="대기중" kind="apply" disabled />;
       }
-      // 승인 -> 채팅하기
-      if (appStatus === 'ACCEPTED') {
-        return (
-          <ActionButton
-            label="채팅하기"
-            kind="chat"
-            onClick={() => alert('채팅으로 이동')}
-          />
-        );
+      if (appStatus === 'REJECTED') {
+        return <ActionButton label="신청 거절됨" kind="apply" disabled />;
       }
-      // NONE/REJECTED → 신청 가능
+      if (status !== '모집 중') {
+        return <ActionButton label="신청 불가" kind="apply" disabled />;
+      }
+
       return (
         <ActionButton
           label="신청하기"
@@ -228,12 +197,11 @@ function StudyDetailPage() {
     return null;
   }
 
-  // JoinModal 제출 시
   function handleApplySubmit(message: string) {
     console.log('신청 사유:', message);
     setIsModalOpen(false);
-    setAppStatus('PENDING'); //중복신청방지
     setIsSuccessModalOpen(true);
+    //신청 API를 호출
   }
 
   return (
