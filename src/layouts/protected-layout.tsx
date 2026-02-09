@@ -27,7 +27,7 @@ export default function ProtectedLayout() {
         {showHomeHeader && <HomeHeader />}
         {showBackHeader && <BackHeader />}
         {showBackHeaderWithTitle && <BackHeader title="Smeet" />}
-        <div className="pt-[4rem] pb-[5rem]">
+        <div className="pt-[3rem] pb-[5rem]">
           <Outlet />
         </div>
         {showNavbar && <Navbar />}
