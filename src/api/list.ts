@@ -13,7 +13,7 @@ export const getMyStudyList = async (): Promise<ResponseMyStudyList> => {
 
 // 전체 모임 리스트
 export const getTotalStudyList = async (
-  cursor: number
+  cursor: number | undefined
 ): Promise<ResponseTotoalStudyList> => {
   const { data } = await axiosInstance.get(`/groups`, {
     params: { cursor },
