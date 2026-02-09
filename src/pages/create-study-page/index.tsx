@@ -1,7 +1,8 @@
+import axios, { AxiosError } from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { useState, useEffect, forwardRef } from 'react';
+import { useState, forwardRef } from 'react';
 import { useNavigate } from 'react-router';
 import BackHeader from '@/components/Headers/BackHeader';
 import StudyTitleInput from '@/components/CreateStudyPage/StudyTitleInput';
@@ -10,6 +11,10 @@ import OptionSelector from '@/components/CreateStudyPage/OptionSelector';
 import ToggleButton from '@/components/ToggleButton';
 import CalendarIcon from '@/assets/calender.svg';
 import PlusIcon from '@/assets/plus.svg';
+import { createGroup } from '@/api/group';
+import Modal from '@/components/Modal';
+import BookIcon from '@/assets/3D-book.svg';
+import { useCreateStudyStore } from '@/store/useCreateStudyStore';
 
 type DateInputProps = {
   value?: string;
@@ -32,32 +37,89 @@ const CustomDateInput = forwardRef<HTMLButtonElement, DateInputProps>(
 CustomDateInput.displayName = 'CustomDateInput';
 
 function CreateStudyPage() {
-  const [form, setForm] = useState({
-    title: '',
-    intro: '',
-  });
-
-  const [memberCount, setMemberCount] = useState('');
-  const [region, setRegion] = useState('');
-  const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
   const navigate = useNavigate();
 
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  //모든 상태와 업데이트 함수를 가져오기
+  const {
+    title,
+    intro,
+    startDate,
+    endDate,
+    selectedDays,
+    memberCount,
+    region,
+    selectedKeywords,
+    setField,
+    reset,
+  } = useCreateStudyStore();
 
-  useEffect(() => {
-    const stored = localStorage.getItem('selectedKeywords');
-    if (stored) {
-      setSelectedKeywords(JSON.parse(stored) as string[]); // 💥 이거 하나로 끝!
-    }
-  }, []);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [createdGroupId, setCreatedGroupId] = useState<number | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setField(name === 'intro' ? 'intro' : 'title', value);
+  };
+
+  //date객체 YYYY-MM-DD문자열로 변환
+  const formatDate = (date: Date | null) => {
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  //제출
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    //유효성 검사
+    if (
+      !title ||
+      !intro ||
+      !startDate ||
+      !endDate ||
+      !memberCount ||
+      !region ||
+      selectedKeywords.length === 0
+    ) {
+      alert('모든 필수 항목(*)을 입력하고 카테고리를 선택해주세요.');
+      return;
+    }
+
+    try {
+      const payload = {
+        title: title,
+        content: intro,
+        start_date: formatDate(startDate),
+        end_date: formatDate(endDate),
+        max_members: parseInt(memberCount, 10),
+        region: region,
+        day_of_week: selectedDays.join(', '),
+        categoryNames: selectedKeywords,
+      };
+
+      const response = await createGroup(payload);
+
+      if (response.id) {
+        setCreatedGroupId(response.id);
+        setIsModalOpen(true);
+      }
+    } catch (error: unknown) {
+      console.error('모임 생성 에러:', error);
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{ message: string }>;
+        alert(
+          axiosError.response?.data?.message ||
+            '모임 생성 중 오류가 발생했습니다.'
+        );
+      } else {
+        alert('알 수 없는 오류가 발생했습니다.');
+      }
+    }
   };
 
   return (
@@ -65,40 +127,38 @@ function CreateStudyPage() {
       <div className="w-full max-w-[480px] bg-[#F8F8F8]">
         <BackHeader title="Smeet" />
 
-        <form className="px-6 flex flex-col gap-6 pb-36">
-          <StudyTitleInput value={form.title} onChange={handleChange} />
-          <StudyIntroTextarea value={form.intro} onChange={handleChange} />
+        <form
+          className="px-6 flex flex-col gap-6 pb-36"
+          onSubmit={(e) => {
+            void handleSubmit(e);
+          }}
+        >
+          <StudyTitleInput value={title} onChange={handleChange} />
+          <StudyIntroTextarea value={intro} onChange={handleChange} />
 
-          {/* 스터디 기간 */}
-          <div className="flex flex-col justify-start items-start w-[370px] gap-2">
+          <div className="flex flex-col justify-start items-start w-full gap-2">
             <p className="text-base font-semibold text-[#2C2C2C]">
               스터디 기간
             </p>
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date: Date | null) => setStartDate(date)}
-                  dateFormat="yyyy.MM.dd"
-                  customInput={<CustomDateInput />}
-                />
-                <span className="text-xs text-[#ABABAB]">부터</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date: Date | null) => setEndDate(date)}
-                  dateFormat="yyyy.MM.dd"
-                  customInput={<CustomDateInput />}
-                />
-                <span className="text-xs text-[#ABABAB]">까지</span>
-              </div>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setField('startDate', date)}
+                dateFormat="yyyy.MM.dd"
+                customInput={<CustomDateInput />}
+              />
+              <span className="text-xs text-[#ABABAB]">부터</span>
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setField('endDate', date)}
+                dateFormat="yyyy.MM.dd"
+                customInput={<CustomDateInput />}
+              />
+              <span className="text-xs text-[#ABABAB]">까지</span>
             </div>
           </div>
 
-          {/* 스터디 요일 */}
-          <div className="flex flex-col justify-start items-start w-[244px] gap-2">
+          <div className="flex flex-col justify-start items-start w-full gap-2">
             <p className="text-base font-semibold text-[#2C2C2C]">
               스터디 요일
             </p>
@@ -109,13 +169,12 @@ function CreateStudyPage() {
                   <button
                     key={day}
                     type="button"
-                    onClick={() =>
-                      setSelectedDays((prev) =>
-                        prev.includes(day)
-                          ? prev.filter((d) => d !== day)
-                          : [...prev, day]
-                      )
-                    }
+                    onClick={() => {
+                      const nextDays = isSelected
+                        ? selectedDays.filter((d) => d !== day)
+                        : [...selectedDays, day];
+                      setField('selectedDays', nextDays);
+                    }}
                     className={`w-8 h-8 rounded-full flex justify-center items-center text-sm font-semibold ${
                       isSelected
                         ? 'bg-[#FA7D71] text-white'
@@ -132,12 +191,12 @@ function CreateStudyPage() {
           <OptionSelector
             type="member"
             selected={memberCount}
-            onChange={setMemberCount}
+            onChange={(val) => setField('memberCount', val)}
           />
           <OptionSelector
             type="region"
             selected={region}
-            onChange={setRegion}
+            onChange={(val) => setField('region', val)}
           />
 
           {/* 스터디 카테고리 */}
@@ -157,11 +216,12 @@ function CreateStudyPage() {
                     bgColor="#FA7D71"
                     textColor="#FFFFFF"
                     borderColor="#FA7D71"
-                    onClick={() =>
-                      setSelectedKeywords((prev: string[]) =>
-                        prev.filter((kw: string) => kw !== keyword)
-                      )
-                    }
+                    onClick={() => {
+                      const nextKeywords = selectedKeywords.filter(
+                        (kw) => kw !== keyword
+                      );
+                      setField('selectedKeywords', nextKeywords);
+                    }}
                   />
                 );
               })}
@@ -170,7 +230,9 @@ function CreateStudyPage() {
               {selectedKeywords.length < 3 && (
                 <button
                   type="button"
-                  onClick={() => void navigate('/filter')}
+                  onClick={() => {
+                    void navigate('/filter');
+                  }}
                   className="flex justify-start items-center gap-1 px-5 py-[7px] rounded-[20px] border border-[#ABABAB] text-sm text-[#2C2C2C]"
                 >
                   <img
@@ -182,17 +244,31 @@ function CreateStudyPage() {
               )}
             </div>
           </div>
+          {/* 하단 버튼 */}
+          <div className="w-full max-w-[480px] pt-3">
+            <button
+              type="submit"
+              className="w-full h-12 rounded-lg bg-[#FA7D71] hover:bg-[#e45b4f] text-white font-semibold text-lg shadow-md"
+            >
+              스밋하기
+            </button>
+          </div>
         </form>
 
-        {/* 하단 버튼 */}
-        <div className="fixed max-w-[480px] bottom-0 w-full pb-8 px-6 bg-[#F8F8F8]">
-          <button
-            type="submit"
-            className="w-full h-12 rounded-lg bg-[#FA7D71] hover:bg-[#e45b4f] text-white font-semibold text-lg shadow-md"
-          >
-            스밋하기
-          </button>
-        </div>
+        {isModalOpen && (
+          <Modal
+            icon={BookIcon}
+            title={`'${title}'\n스터디 생성이 완료되었습니다`}
+            content="열정 가득한 배움, 시작해볼까요?"
+            onConfirm={() => {
+              // 확인 버튼 클릭 시 상세 페이지로 이동
+              reset();
+              if (createdGroupId) {
+                void navigate(`/study-detail/${createdGroupId}`);
+              }
+            }}
+          />
+        )}
       </div>
     </div>
   );
