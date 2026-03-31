@@ -1,33 +1,12 @@
 import { useNavigate } from 'react-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ToggleButton from '@/components/ToggleButton';
 import StudyCard from '@/components/StudyCard';
 import Filter from '@/assets/filter.svg';
 import Plus from '@/assets/plus.svg';
-
-const mockData = [
-  {
-    id: 1,
-    title: '코딩 스터디 하실 분 구해요~!',
-    keywords: ['코딩', '코딩테스트', '모각코'],
-    member: 1,
-    limit: 4,
-  },
-  {
-    id: 2,
-    title: '코딩 스터디 하실 분 구해요~!',
-    keywords: ['코딩', '코딩테스트', '모각코'],
-    member: 1,
-    limit: 4,
-  },
-  {
-    id: 3,
-    title: '코딩 스터디 하실 분 구해요~!',
-    keywords: ['코딩', '코딩테스트', '모각코'],
-    member: 4,
-    limit: 4,
-  },
-];
+import { useCreateStudyStore } from '@/store/useCreateStudyStore';
+import type { ResponseTotoalStudyList } from '@/types/list';
+import { getTotalStudyList } from '@/api/list';
 
 const StateList = [
   '서울/경기',
@@ -43,14 +22,21 @@ const StateList = [
 export default function StudyListPage() {
   const navigate = useNavigate();
   const [selectedState, setSelectedState] = useState('서울/경기');
+  const { selectedKeywords, setField } = useCreateStudyStore();
+  const [list, setList] = useState<ResponseTotoalStudyList>();
 
-  const localStorageKeywords = JSON.parse(
-    localStorage.getItem('selectedKeywords') ?? 'null'
-  ) as string[] | null;
+  useEffect(() => {
+    const fetctMyStudyList = async () => {
+      try {
+        const data = await getTotalStudyList(5);
+        setList(data);
+      } catch (e) {
+        console.log('my study list error', e);
+      }
+    };
 
-  const [selectedKeywords, setSelectedKeywords] = useState<string[] | null>(
-    localStorageKeywords
-  );
+    fetctMyStudyList();
+  }, []);
 
   const handleClick = () => {
     void navigate('/filter');
@@ -61,30 +47,15 @@ export default function StudyListPage() {
   };
 
   const handleMakeStudy = () => {
-    void navigate('/new-study');
+    void navigate('/create-study-page');
   };
 
   const handleDelete = (keyword: string) => {
-    setSelectedKeywords((prev) =>
-      prev ? prev.filter((kw) => kw !== keyword) : null
-    );
+    const updatedKeywords = selectedKeywords.includes(keyword)
+      ? selectedKeywords.filter((kw) => kw !== keyword)
+      : [...selectedKeywords, keyword];
 
-    if (localStorage.getItem('selectedKeywords')) {
-      try {
-        const parsedKeywords: string[] = JSON.parse(
-          localStorage.getItem('selectedKeywords') || ''
-        );
-
-        const filteredKeywords = parsedKeywords.filter((kw) => kw !== keyword);
-
-        localStorage.setItem(
-          'selectedKeywords',
-          JSON.stringify(filteredKeywords)
-        );
-      } catch (error) {
-        console.error('localStorage 파싱 에러:', error);
-      }
-    }
+    setField('selectedKeywords', updatedKeywords);
   };
 
   return (
@@ -126,16 +97,25 @@ export default function StudyListPage() {
       </h2>
 
       <div className="px-6 mt-25 flex flex-col gap-3 min-h-screen">
-        {mockData?.map((data) => (
-          <StudyCard
-            key={data.id}
-            id={data.id}
-            title={data.title}
-            keywords={data.keywords}
-            member={data.member}
-            limit={data.limit}
-          />
-        ))}
+        {list?.items?.map((data) => {
+          const filteredKeywords = data.categories.filter((c) =>
+            selectedKeywords.includes(c)
+          );
+
+          return filteredKeywords.length > 0 ||
+            selectedKeywords.length === 0 ? (
+            <StudyCard
+              key={data.id}
+              id={data.id}
+              title={data.title}
+              keywords={data.categories}
+              member={data.current_members}
+              limit={data.max_members}
+            />
+          ) : (
+            ''
+          );
+        })}
         <button
           type="button"
           title="새로운 스터디 생성"

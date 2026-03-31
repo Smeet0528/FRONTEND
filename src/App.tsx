@@ -12,6 +12,9 @@ import StudyListPage from './pages/study-list-page';
 import FilterPage from './pages/filter-page';
 import AlarmPage from './pages/alarm-page';
 import StudyDetailPage from './pages/study-detail-page';
+import CreateStudyPage from './pages/create-study-page';
+import ChatPage from './pages/chat-page';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const publicRoutes: RouteObject[] = [
   {
@@ -25,10 +28,6 @@ const publicRoutes: RouteObject[] = [
       {
         path: 'register',
         element: <RegisterPage />,
-      },
-      {
-        path: 'study-detail',
-        element: <StudyDetailPage />,
       },
     ],
   },
@@ -55,12 +54,30 @@ const protectedRoutes: RouteObject[] = [
         path: 'alarm',
         element: <AlarmPage />,
       },
+      {
+        path: 'study-detail/:id',
+        element: <StudyDetailPage />,
+      },
+      {
+        path: 'create-study-page',
+        element: <CreateStudyPage />,
+      },
+      {
+        path: 'chat',
+        element: <ChatPage title="코딩 스터디 하실 분 구해요~!" />,
+      },
     ],
   },
 ];
 
+const queryClient = new QueryClient();
+
 const router = createBrowserRouter([...publicRoutes, ...protectedRoutes]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 }

@@ -1,16 +1,16 @@
-import { matchPath, Outlet, useLocation } from 'react-router';
+import { matchPath, Navigate, Outlet, useLocation } from 'react-router';
 import HomeHeader from '../components/Headers/HomeHeader';
 import Navbar from '../components/Navbar';
 import BackHeader from '@/components/Headers/BackHeader';
 
 export default function ProtectedLayout() {
-  // const navigate = useNavigate();
-
-  // if (!accessToken) {
-  //   void navigate('/login');
-  // }
-
+  const accessToken = localStorage.getItem('accessToken');
   const location = useLocation();
+
+  if (!accessToken) {
+    return <Navigate to="/login" replace />;
+  }
+
   const isHomePage = matchPath('/', location.pathname);
   const isStudyListPage = matchPath('/study-list', location.pathname);
   const isFilterPage = matchPath('/filter', location.pathname);
@@ -27,7 +27,7 @@ export default function ProtectedLayout() {
         {showHomeHeader && <HomeHeader />}
         {showBackHeader && <BackHeader />}
         {showBackHeaderWithTitle && <BackHeader title="Smeet" />}
-        <div className="pt-[4rem] pb-[5rem]">
+        <div className="pt-[3rem] pb-[5rem]">
           <Outlet />
         </div>
         {showNavbar && <Navbar />}

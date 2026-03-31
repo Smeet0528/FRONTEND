@@ -1,6 +1,6 @@
 import ToggleButton from '@/components/ToggleButton';
-import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useCreateStudyStore } from '@/store/useCreateStudyStore';
 
 const mockData = [
   {
@@ -35,19 +35,23 @@ const mockData = [
 
 export default function FilterPage() {
   const navigate = useNavigate();
-  const [selectedKeywords, setSelectedKeywords] = useState<string[]>([]);
+
+  const { selectedKeywords, setField } = useCreateStudyStore();
 
   const handleToggle = (keyword: string) => {
-    setSelectedKeywords((prev) =>
-      prev.includes(keyword)
-        ? prev.filter((kw) => kw !== keyword)
-        : [...prev, keyword]
-    );
+    //selectedKeywords를 기준으로 토글 로직을 처리
+    const nextKeywords = selectedKeywords.includes(keyword)
+      ? selectedKeywords.filter((kw) => kw !== keyword)
+      : [...selectedKeywords, keyword];
+
+    //최대 3개 제한
+    if (nextKeywords.length > 3) return;
+
+    setField('selectedKeywords', nextKeywords);
   };
 
   const handleSelect = () => {
-    localStorage.setItem('selectedKeywords', JSON.stringify(selectedKeywords));
-    void navigate('/study-list');
+    void navigate(-1);
   };
 
   return (
@@ -66,7 +70,7 @@ export default function FilterPage() {
                   isToggle={true}
                   text={keyword}
                   toggled={selectedKeywords.includes(keyword)}
-                  onToggle={handleToggle}
+                  onToggle={() => handleToggle(keyword)}
                   borderColor="#ABABAB"
                 />
               ))}

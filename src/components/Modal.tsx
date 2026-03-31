@@ -1,25 +1,43 @@
 import { useNavigate } from 'react-router';
 
 interface ModalProps {
-  icon: string;
+  icon?: string;
   title: string;
   content: string;
-  navigateUrl: string;
+  navigateUrl?: string;
+  onConfirm?: () => void;
 }
 
-const Modal = ({ icon, title, content, navigateUrl }: ModalProps) => {
+const Modal = ({
+  icon,
+  title,
+  content,
+  navigateUrl,
+  onConfirm,
+}: ModalProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    void navigate(`/${navigateUrl}`);
+    //onConfirm이 있으면 우선 실행 (페이지 이동 없음)
+    if (onConfirm) {
+      onConfirm?.();
+      return;
+    }
+    //navigateUrl이 있으면 해당 경로로 이동
+    if (navigateUrl) {
+      void navigate(`/${navigateUrl}`);
+      return;
+    }
   };
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-100">
-      <div className="w-full max-w-[90%] h-[268px] flex flex-col justify-center items-center bg-white rounded-2xl">
-        <img src={icon} alt="모달 아이콘" className="w-25 h-25" />
+    <div className="fixed inset-0 flex justify-center items-center bg-black/50 z-50">
+      <div className="w-full max-w-[400px] py-5 flex flex-col justify-center items-center bg-white rounded-2xl">
+        {icon && <img src={icon} alt="모달 아이콘" className="w-25 h-25" />}
         <div className="pt-2 pb-4.5">
-          <p className="font-[pretendard] font-medium text-center">{title}</p>
+          <p className="font-[pretendard] font-medium text-center whitespace-pre-line">
+            {title}
+          </p>
           <p className="font-[pretendard] font-normal text-[14px] text-[#ABABAB] text-center">
             {content}
           </p>
