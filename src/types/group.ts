@@ -46,7 +46,23 @@ export interface GroupDetailResponse {
   max_members: number;
   status: string;
   content: string;
-  categories: string[]; 
+  categories: string[];
   applicationStatus: ApplicationStatus;
   roleOfCurrentUser: UserRole;
+}
+
+export interface RequestApplyGroupDto {
+  message: string;
+}
+
+export interface ResponseApplyGroupDto {
+  id: number;
+  message: string;
+  status: string;
+  created_at: string;
+  group: {
+    id: number;
+    title: string;
+    status: string;
+  };
 }
