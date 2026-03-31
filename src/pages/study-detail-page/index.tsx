@@ -10,6 +10,7 @@ import Modal from '@/components/Modal';
 import successIcon from '@/assets/3D-fire.svg';
 
 import { getGroupDetail } from '@/api/group';
+import { applyGroup } from '@/api/group';
 import type {
   GroupDetailResponse,
   UserRole,
@@ -29,13 +30,13 @@ interface StudyUIModel {
   description: string;
 }
 
-//YYYY-MM-DD → YY.MM.DD 
+//YYYY-MM-DD → YY.MM.DD
 function formatDate(yyyyMmDd: string) {
   if (!yyyyMmDd.includes('-')) return yyyyMmDd;
   const [y, m, d] = yyyyMmDd.split('-');
   return `${y.slice(2)}.${m}.${d}`;
 }
-                 
+
 function ActionButton(props: {
   label: string;
   disabled?: boolean;
@@ -86,6 +87,25 @@ function StudyDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+
+  async function handleApplySubmit(message: string) {
+    if (!id) return;
+
+    try {
+      console.log('신청 메시지:', message);
+      await applyGroup(id, { message });
+
+      setIsModalOpen(false);
+      setIsSuccessModalOpen(true);
+
+      //신청후 버튼 대기중 수정
+      const res = await getGroupDetail(id);
+      setData(res);
+    } catch (error) {
+      console.error('신청 실패:', error);
+      alert('신청 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  }
 
   //API 호출
   useEffect(() => {
@@ -153,7 +173,7 @@ function StudyDetailPage() {
             label="채팅하기"
             kind="chat"
             onClick={() => {
-              void navigate(`/chat/${data.id}`);//수정예정
+              void navigate(`/chat/${data.id}`); //수정예정
             }}
           />
         </div>
@@ -195,13 +215,6 @@ function StudyDetailPage() {
     }
 
     return null;
-  }
-
-  function handleApplySubmit(message: string) {
-    console.log('신청 사유:', message);
-    setIsModalOpen(false);
-    setIsSuccessModalOpen(true);
-    //신청 API를 호출
   }
 
   return (
@@ -253,7 +266,10 @@ function StudyDetailPage() {
             //줄바꿈하려면 모달컴포넌트에 whitespace-pre-line 추가해야함
             title={`'${study.title}'\n스터디 신청이 완료되었습니다`}
             content="열정 가득한 배움, 시작해볼까요?"
-            onConfirm={() => setIsSuccessModalOpen(false)}
+            onConfirm={() => {
+              setIsSuccessModalOpen(false);
+              window.location.reload();
+            }}
           />
         )}
       </div>
